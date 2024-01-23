@@ -1,5 +1,7 @@
 export default {
   palette: {
-    primary: '#EF2432',
+    primary: '#bd2846',
+    secondary: '#f9f7f2',
+    darkBlue: '#001529',
   },
-};
+} as const;
