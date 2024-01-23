@@ -1,5 +1,5 @@
 export default {
-    palette: {
-      primary: '#EF2432',
-    },
-  };
+  palette: {
+    primary: '#EF2432',
+  },
+};
