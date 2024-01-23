@@ -2,7 +2,13 @@
   "name": "brand-fashion",
   "private": false,
   "version": "0.0.0",
+  "license":  "MIT",
   "type": "module",
+  "author": {
+    "email": "specter8471102@gmail.com",
+    "name": "Oleh Sannikov",
+    "url": "https://github.com/Zurarose"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
