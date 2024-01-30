@@ -1,8 +1,8 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
+import { normalize } from 'styled-normalize';
 import { Routes } from './Routes';
 import { createGlobalStyle } from 'styled-components';
-import { normalize } from 'styled-normalize';
 import theme from './ui-kit/theme';
 
 export const GlobalStyle = createGlobalStyle`
