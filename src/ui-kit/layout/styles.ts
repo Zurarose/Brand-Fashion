@@ -10,14 +10,14 @@ export const SLayout = styled(Layout)`
 
 export const SHeader = styled(Header)`
   padding: 0;
-  background: ${({ theme }) => theme.palette.primary};
-  border-bottom: 4px solid ${({ theme }) => theme.palette.darkBlue};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 `;
 
 export const SContent = styled(Content)`
-  padding: 24;
-  min-height: 280;
-  background: ${({ theme }) => theme.palette.secondary};
+  padding: 24px;
 `;
 
 export const SSider = styled(Sider)``;
@@ -30,7 +30,6 @@ export const HideButton = styled(Button).attrs({
   font-size: '16px';
   width: 64px;
   height: 64px;
-  color: ${({ theme }) => theme.palette.secondary};
   position: absolute;
   bottom: 0px;
   right: 0px;
@@ -40,22 +39,23 @@ export const HideButton = styled(Button).attrs({
 
 export const MenuUnfold = styled(MenuUnfoldOutlined).attrs({
   style: { fontSize: '24px' },
-})`
-  color: ${({ theme }) => theme.palette.secondary};
-`;
+})``;
 
 export const MenuFold = styled(MenuFoldOutlined).attrs({
   style: { fontSize: '24px' },
-})`
-  color: ${({ theme }) => theme.palette.secondary};
-`;
+})``;
 
 export const Logo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 24px;
+  font-size: 16px;
+  height: 64px;
   margin-left: 16px;
-  color: ${({ theme }) => theme.palette.secondary};
   font-family: sans-serif;
+  color: ${({ theme }) => theme.palette.secondary};
+`;
+
+export const HeaderImage = styled.img`
+  filter: brightness(400%);
 `;
