@@ -54,6 +54,8 @@ export const Logo = styled.div`
   margin-left: 16px;
   font-family: sans-serif;
   color: ${({ theme }) => theme.palette.secondary};
+  letter-spacing: 1px;
+  text-transform: uppercase;
 `;
 
 export const HeaderImage = styled.img`

@@ -7,3 +7,13 @@ export type Client = {
   birthday: string;
   phone: string;
 };
+
+export type Purchase = {
+  id: string;
+  objectId: string;
+  price: number;
+  bonuseReceived: number;
+  date: string;
+  usedBonuses: number;
+  itemName: string;
+};

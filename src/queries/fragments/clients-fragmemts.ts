@@ -11,3 +11,15 @@ export const ClientShortFragment = gql`
     phone
   }
 `;
+
+export const PurchaseShortFragment = gql`
+  fragment PurchaseShortFragment on Purchase {
+    id
+    objectId
+    price
+    bonuseReceived
+    date
+    usedBonuses
+    itemName
+  }
+`;

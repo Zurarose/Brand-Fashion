@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
-import { ClientShortFragment } from './fragments/clients-fragmemts';
-import { Client } from '../types/client';
+import { ClientShortFragment, PurchaseShortFragment } from './fragments/clients-fragmemts';
+import { Client, Purchase } from '../types/client';
 
 export type ClientsResponseType = {
   clients: {
@@ -64,4 +64,25 @@ export const CreateClientMutation = gql`
     }
   }
   ${ClientShortFragment}
+`;
+
+export type CreatePurchaseResponseType = {
+  createPurchase: {
+    purchase: Purchase;
+  };
+};
+
+export type CreatePurchaseRequestType = {
+  fields: Pick<Purchase, 'usedBonuses' | 'itemName' | 'price'> & { date: Date; Client: { link: string } };
+};
+
+export const CreatePurchaseMutation = gql`
+  mutation createPurchase($fields: CreatePurchaseFieldsInput!) {
+    createPurchase(input: { fields: $fields }) {
+      purchase {
+        ...PurchaseShortFragment
+      }
+    }
+  }
+  ${PurchaseShortFragment}
 `;

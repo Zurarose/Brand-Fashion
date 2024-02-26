@@ -1,10 +1,9 @@
 import React from 'react';
 import { StockOutlined, UserOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
-import { HeaderImage, Logo, SContent, SHeader, SLayout, SSider } from './styles';
+import { Logo, SContent, SHeader, SLayout, SSider } from './styles';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { routes } from '../../constants/routes';
-import Image from '../../assets/header-image.webp';
 
 export const AppLayout = () => {
   const navigate = useNavigate();
@@ -34,14 +33,12 @@ export const AppLayout = () => {
     <SLayout>
       <SSider trigger={null}>
         <SHeader>
-          <Logo>BRAND FASHION</Logo>
+          <Logo>brand fashion</Logo>
         </SHeader>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={[initKey]} items={items} />
       </SSider>
       <Layout>
-        <SHeader>
-          <HeaderImage src={Image} />
-        </SHeader>
+        <SHeader />
         <SContent>
           <Outlet />
         </SContent>

@@ -3,8 +3,18 @@ import { ClientsPage } from '../../components/ClientsPage';
 import { useClients } from '../../hooks/clients';
 
 export const ClientsPageContainer = () => {
-  const { clients, onSearch, onDelete, loading, onCreate } = useClients();
+  const { clients, onSearch, onDelete, loading, onCreate, onCreatePurchase, error } = useClients();
   return (
-    <ClientsPage clients={clients} onSearch={onSearch} onDelete={onDelete} loading={loading} onCreate={onCreate} />
+    <>
+      {error}
+      <ClientsPage
+        clients={clients}
+        onSearch={onSearch}
+        onDelete={onDelete}
+        loading={loading}
+        onCreate={onCreate}
+        onCreatePurchase={onCreatePurchase}
+      />
+    </>
   );
 };
