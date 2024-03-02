@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { ClientPageProps } from '.';
 import { Button, DatePicker, DatePickerProps, Flex, Input, Modal, Typography } from 'antd';
 import { CreatePurchaseRequestType } from '../../queries/client';
 import dayjs from 'dayjs';
 import { CURRENCY_SYMBOL } from '../../constants/common';
 import { PlusOutlined, StarOutlined } from '@ant-design/icons';
 
-type PurchaseButtonProps = Pick<ClientPageProps, 'onCreatePurchase'> & { objectId: string };
-
 type CreatePurchaseStateType = Omit<CreatePurchaseRequestType['fields'], 'date' | 'Client'> & { date: dayjs.Dayjs };
+
+type PurchaseButtonProps = {
+  objectId: string;
+  onCreatePurchase: (fields: CreatePurchaseRequestType['fields']) => Promise<void>;
+};
 
 export const PurchaseButton: React.FC<PurchaseButtonProps> = ({ onCreatePurchase, objectId }) => {
   const [open, setOpen] = useState(false);

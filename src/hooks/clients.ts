@@ -1,5 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client';
 import {
+  ClientPurchasesQuery,
+  ClientPurchasesResponseType,
   ClientQuery,
   ClientsResponseType,
   CreateClientMutation,
@@ -14,57 +16,20 @@ import {
 } from '../queries/client';
 import { useViewerStore } from '../store/user';
 import { useState } from 'react';
-import { Client } from '../types/client';
+import { ClientT } from '../types/client';
 import { COUNTRY_CODE } from '../constants/common';
 import { message } from 'antd';
 
-export const useClients = () => {
-  const [loading, setLoading] = useState(true);
-  const { viewer } = useViewerStore();
+export const useClientActions = () => {
   const [messageApi, error] = message.useMessage();
-  const [initClients, setInitClients] = useState<Client[]>([]);
-  const [filteredClients, setFilteredClients] = useState<Client[]>([]);
 
-  const [deleteClient] = useMutation<DeleteClientResponseType, DeleteClientRequestType>(DeleteClientMutation);
+  const [loading, setLoading] = useState(false);
 
   const [createClient] = useMutation<CreateClientResponseType, CreateClientRequestType>(CreateClientMutation);
-
   const [createPurchase] = useMutation<CreatePurchaseResponseType, CreatePurchaseRequestType>(CreatePurchaseMutation);
+  const [deleteClient] = useMutation<DeleteClientResponseType, DeleteClientRequestType>(DeleteClientMutation);
 
-  const { refetch } = useQuery<ClientsResponseType>(ClientQuery, {
-    skip: !viewer,
-    onCompleted: (data) => {
-      parseClientData(data);
-      setLoading(false);
-    },
-  });
-
-  const onCreate = async (fields: CreateClientRequestType['fields']) => {
-    try {
-      setLoading(true);
-      const { data, errors } = await createClient({
-        variables: {
-          fields: { ...fields, phone: `${COUNTRY_CODE}${fields.phone}` },
-        },
-      });
-      if (data?.createClient?.client?.id) {
-        const { data } = await refetch();
-        parseClientData(data);
-        return;
-      }
-      throw new Error(errors?.[0]?.message);
-    } catch (error) {
-      if (error instanceof Error)
-        messageApi.open({
-          type: 'error',
-          content: error.message ? error.message : '',
-        });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onCreatePurchase = async (fields: CreatePurchaseRequestType['fields']) => {
+  const onCreatePurchase = async (fields: CreatePurchaseRequestType['fields'], onSuccess?: () => Promise<void>) => {
     try {
       setLoading(true);
       const { data, errors } = await createPurchase({
@@ -73,8 +38,7 @@ export const useClients = () => {
         },
       });
       if (data?.createPurchase?.purchase?.id) {
-        const { data } = await refetch();
-        parseClientData(data);
+        onSuccess?.();
         return;
       }
       throw new Error(errors?.[0]?.message);
@@ -89,13 +53,12 @@ export const useClients = () => {
     }
   };
 
-  const onDelete = async (id: string) => {
+  const onDelete = async (id: string, onSuccess?: () => Promise<void>) => {
     try {
       setLoading(true);
       const { data, errors } = await deleteClient({ variables: { id: id } });
       if (data?.deleteClient?.client?.id) {
-        const { data } = await refetch();
-        parseClientData(data);
+        onSuccess?.();
         return;
       }
       throw new Error(errors?.[0]?.message);
@@ -108,6 +71,71 @@ export const useClients = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const onCreate = async (fields: CreateClientRequestType['fields'], onSuccess?: () => Promise<void>) => {
+    try {
+      setLoading(true);
+      const { data, errors } = await createClient({
+        variables: {
+          fields: { ...fields, phone: `${COUNTRY_CODE}${fields.phone}` },
+        },
+      });
+      if (data?.createClient?.client?.id) {
+        onSuccess?.();
+        return;
+      }
+      throw new Error(errors?.[0]?.message);
+    } catch (error) {
+      if (error instanceof Error)
+        messageApi.open({
+          type: 'error',
+          content: error.message ? error.message : '',
+        });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    error,
+    onDelete,
+    onCreatePurchase,
+    loading,
+    onCreate,
+  };
+};
+
+export const useClients = () => {
+  const [loading, setLoading] = useState(true);
+  const { viewer } = useViewerStore();
+  const [initClients, setInitClients] = useState<ClientT[]>([]);
+  const [filteredClients, setFilteredClients] = useState<ClientT[]>([]);
+  const { error, loading: loadingAction, onCreate, onCreatePurchase, onDelete } = useClientActions();
+
+  const { refetch } = useQuery<ClientsResponseType>(ClientQuery, {
+    skip: !viewer,
+    onCompleted: (data) => {
+      parseClientsData(data);
+      setLoading(false);
+    },
+  });
+
+  const onSuccess = async () => {
+    const { data } = await refetch();
+    parseClientsData(data);
+  };
+
+  const onCreateClient = async (fields: CreateClientRequestType['fields']) => {
+    onCreate(fields, onSuccess);
+  };
+
+  const onDeleteClient = async (id: string) => {
+    onDelete(id, onSuccess);
+  };
+
+  const onCreateClientPurschuse = async (fields: CreatePurchaseRequestType['fields']) => {
+    onCreatePurchase(fields, onSuccess);
   };
 
   const onSearch = (query: string) => {
@@ -119,26 +147,67 @@ export const useClients = () => {
     );
   };
 
-  const parseClientData = (data: ClientsResponseType) => {
+  const parseClientsData = (data: ClientsResponseType) => {
     const clients = data?.clients?.edges?.map(
       (client) =>
         ({
           ...client.node,
           birthday: new Date(client.node?.birthday)?.toLocaleDateString('ru-RU'),
           id: client?.node?.phone?.slice(-4),
-        }) as Client,
+        }) as ClientT,
     );
     setInitClients(clients);
     setFilteredClients(clients);
   };
 
   return {
-    loading,
     error,
-    clients: filteredClients,
-    onCreatePurchase,
     onSearch,
-    onCreate,
-    onDelete,
+    loading: loading || loadingAction,
+    clients: filteredClients,
+    onCreatePurchase: onCreateClientPurschuse,
+    onCreate: onCreateClient,
+    onDelete: onDeleteClient,
   };
+};
+
+export const useClient = (clientId?: string) => {
+  const { viewer } = useViewerStore();
+  const [loading, setLoading] = useState(true);
+  const [client, setClient] = useState<ClientT | undefined>(undefined);
+  const { onCreatePurchase, onDelete, error } = useClientActions();
+
+  const { refetch } = useQuery<ClientPurchasesResponseType>(ClientPurchasesQuery, {
+    variables: { id: clientId },
+    skip: !clientId || !viewer,
+    onCompleted: (data) => {
+      parseClientData(data);
+      setLoading(false);
+    },
+  });
+
+  const onSuccess = async () => {
+    const { data } = await refetch();
+    parseClientData(data);
+  };
+
+  const onDeleteClient = async (id: string) => {
+    onDelete(id, onSuccess);
+  };
+
+  const onCreateClientPurschuse = async (fields: CreatePurchaseRequestType['fields']) => {
+    onCreatePurchase(fields, onSuccess);
+  };
+
+  const parseClientData = (data: ClientPurchasesResponseType) => {
+    const client = {
+      ...data?.client,
+      birthday: new Date(data?.client?.birthday)?.toLocaleDateString('ru-RU'),
+      id: data?.client?.phone?.slice(-4),
+    };
+    setClient(client);
+    return;
+  };
+
+  return { loading, error, client, onDelete: onDeleteClient, onCreatePurchase: onCreateClientPurschuse };
 };

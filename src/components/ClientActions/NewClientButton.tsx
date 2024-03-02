@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { CreateClientRequestType } from '../../queries/client';
-import { ClientPageProps } from '.';
 import dayjs from 'dayjs';
 import { COUNTRY_CODE } from '../../constants/common';
 import { Button, DatePicker, DatePickerProps, Flex, Input, Modal, Typography } from 'antd';
@@ -8,7 +7,9 @@ import { PlusOutlined } from '@ant-design/icons';
 
 type CreateClientStateType = Omit<CreateClientRequestType['fields'], 'birthday'> & { birthday: dayjs.Dayjs };
 
-type NewClientButtonProps = Pick<ClientPageProps, 'onCreate'>;
+type NewClientButtonProps = {
+  onCreate: (fields: CreateClientRequestType['fields']) => Promise<void>;
+};
 
 export const NewClientButton: React.FC<NewClientButtonProps> = ({ onCreate }) => {
   const [open, setOpen] = useState(false);

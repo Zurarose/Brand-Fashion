@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { ClientPageProps } from '.';
 import { Button, Modal } from 'antd';
 
-type DeleteButtonProps = Pick<ClientPageProps, 'onDelete'> & { objectId: string; name: string };
+type DeleteButtonProps = {
+  onDelete: (id: string) => Promise<void>;
+  objectId: string;
+  name: string;
+};
 export const DeleteButton: React.FC<DeleteButtonProps> = ({ onDelete, name, objectId }) => {
   const [open, setOpen] = useState(false);
 

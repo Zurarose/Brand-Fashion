@@ -23,3 +23,23 @@ export const PurchaseShortFragment = gql`
     itemName
   }
 `;
+
+export const ClientFullFragment = gql`
+  fragment ClientFullFragment on Client {
+    id
+    objectId
+    fullName
+    bonuses
+    giftedBonuses
+    birthday
+    phone
+    Purchases {
+      edges {
+        node {
+          ...PurchaseShortFragment
+        }
+      }
+    }
+  }
+  ${PurchaseShortFragment}
+`;

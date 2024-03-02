@@ -1,14 +1,10 @@
-export type Client = {
-  id: string;
-  objectId: string;
-  fullName: string;
-  bonuses: number;
-  giftedBonuses: number;
-  birthday: string;
-  phone: string;
+export type Connection<T> = {
+  edges: {
+    node: T;
+  }[];
 };
 
-export type Purchase = {
+export type PurchaseT = {
   id: string;
   objectId: string;
   price: number;
@@ -16,4 +12,15 @@ export type Purchase = {
   date: string;
   usedBonuses: number;
   itemName: string;
+};
+
+export type ClientT = {
+  id: string;
+  objectId: string;
+  fullName: string;
+  bonuses: number;
+  giftedBonuses: number;
+  birthday: string;
+  phone: string;
+  Purchases?: Connection<PurchaseT>;
 };

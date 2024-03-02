@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
-    "@apollo/client": "^3.8.10",
+    "@apollo/client": "^3.9.5",
     "antd": "^5.13.2",
     "dayjs": "^1.11.10",
     "graphql": "^16.8.1",

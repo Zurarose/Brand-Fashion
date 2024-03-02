@@ -1,11 +1,11 @@
 import { gql } from '@apollo/client';
-import { ClientShortFragment, PurchaseShortFragment } from './fragments/clients-fragmemts';
-import { Client, Purchase } from '../types/client';
+import { ClientFullFragment, ClientShortFragment, PurchaseShortFragment } from './fragments/clients-fragmemts';
+import { ClientT, PurchaseT } from '../types/client';
 
 export type ClientsResponseType = {
   clients: {
     edges: {
-      node: Client;
+      node: ClientT;
     }[];
   };
 };
@@ -21,6 +21,19 @@ export const ClientQuery = gql`
     }
   }
   ${ClientShortFragment}
+`;
+
+export type ClientPurchasesResponseType = {
+  client: ClientT;
+};
+
+export const ClientPurchasesQuery = gql`
+  query client($id: ID!) {
+    client(id: $id) {
+      ...ClientFullFragment
+    }
+  }
+  ${ClientFullFragment}
 `;
 
 export type DeleteClientRequestType = {
@@ -47,12 +60,12 @@ export const DeleteClientMutation = gql`
 
 export type CreateClientResponseType = {
   createClient: {
-    client: Client;
+    client: ClientT;
   };
 };
 
 export type CreateClientRequestType = {
-  fields: Pick<Client, 'fullName' | 'phone'> & { birthday: Date };
+  fields: Pick<ClientT, 'fullName' | 'phone'> & { birthday: Date };
 };
 
 export const CreateClientMutation = gql`
@@ -68,12 +81,12 @@ export const CreateClientMutation = gql`
 
 export type CreatePurchaseResponseType = {
   createPurchase: {
-    purchase: Purchase;
+    purchase: PurchaseT;
   };
 };
 
 export type CreatePurchaseRequestType = {
-  fields: Pick<Purchase, 'usedBonuses' | 'itemName' | 'price'> & { date: Date; Client: { link: string } };
+  fields: Pick<PurchaseT, 'usedBonuses' | 'itemName' | 'price'> & { date: Date; Client: { link: string } };
 };
 
 export const CreatePurchaseMutation = gql`
