@@ -5,7 +5,7 @@ import { LoadingScreen } from '../../ui-kit/loading';
 import { Descriptions, Flex } from 'antd';
 import { PurchaseButton } from '../ClientActions/PurchaseButton';
 import { DeleteButton } from '../ClientActions/DeleteButton';
-import { PurchuseCard, PurchusesListWrapper } from './styles';
+import { PurchaseCard, PurchasesListWrapper } from './styles';
 import { CURRENCY_SYMBOL } from '../../constants/common';
 
 type ClientInfoPageProps = {
@@ -35,18 +35,18 @@ export const ClientInfoPage: React.FC<ClientInfoPageProps> = ({ loading, client,
         <Descriptions.Item label="Gifted Bonuses">{client?.giftedBonuses}</Descriptions.Item>
         <Descriptions.Item label="Bithday">{client?.birthday}</Descriptions.Item>
         <Descriptions.Item label="Phone">{client?.phone}</Descriptions.Item>
-        <Descriptions.Item label="Total Purchuses">{client?.Purchases?.edges?.length}</Descriptions.Item>
+        <Descriptions.Item label="Total Purchases">{client?.Purchases?.edges?.length}</Descriptions.Item>
       </Descriptions>
-      <PurchusesList purshuses={client?.Purchases} />
+      <PurchasesList purshuses={client?.Purchases} />
     </Flex>
   );
 };
 
-const PurchusesList: React.FC<{ purshuses: ClientT['Purchases'] }> = ({ purshuses }) => {
+const PurchasesList: React.FC<{ purshuses: ClientT['Purchases'] }> = ({ purshuses }) => {
   return (
-    <PurchusesListWrapper>
+    <PurchasesListWrapper>
       {purshuses?.edges?.map((item) => (
-        <PurchuseCard key={item?.node?.objectId}>
+        <PurchaseCard key={item?.node?.objectId}>
           <Descriptions column={6} size="small" title={item?.node?.itemName}>
             <Descriptions.Item label="ID">{item?.node?.objectId?.toUpperCase()}</Descriptions.Item>
             <Descriptions.Item label="Price">
@@ -58,8 +58,8 @@ const PurchusesList: React.FC<{ purshuses: ClientT['Purchases'] }> = ({ purshuse
             <Descriptions.Item label="Bonuses received">{item?.node?.bonuseReceived}</Descriptions.Item>
             <Descriptions.Item label="Bonuses used">{item?.node?.usedBonuses}</Descriptions.Item>
           </Descriptions>
-        </PurchuseCard>
+        </PurchaseCard>
       ))}
-    </PurchusesListWrapper>
+    </PurchasesListWrapper>
   );
 };

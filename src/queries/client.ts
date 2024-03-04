@@ -1,13 +1,10 @@
 import { gql } from '@apollo/client';
-import { ClientFullFragment, ClientShortFragment, PurchaseShortFragment } from './fragments/clients-fragmemts';
-import { ClientT, PurchaseT } from '../types/client';
+import { ClientFullFragment, ClientShortFragment } from './fragments/clients-fragments';
+import { ClientT, Connection, PurchaseT } from '../types/client';
+import { PurchaseShortFragment } from './fragments/purchases-fragments';
 
 export type ClientsResponseType = {
-  clients: {
-    edges: {
-      node: ClientT;
-    }[];
-  };
+  clients: Connection<ClientT>;
 };
 
 export const ClientQuery = gql`
@@ -81,7 +78,7 @@ export const CreateClientMutation = gql`
 
 export type CreatePurchaseResponseType = {
   createPurchase: {
-    purchase: PurchaseT;
+    purchasa: PurchaseT;
   };
 };
 
@@ -92,7 +89,7 @@ export type CreatePurchaseRequestType = {
 export const CreatePurchaseMutation = gql`
   mutation createPurchase($fields: CreatePurchaseFieldsInput!) {
     createPurchase(input: { fields: $fields }) {
-      purchase {
+      purchasa {
         ...PurchaseShortFragment
       }
     }

@@ -1,14 +1,14 @@
 import { Card, Flex } from 'antd';
 import styled from 'styled-components';
 
-export const PurchusesListWrapper = styled(Flex).attrs({
+export const PurchasesListWrapper = styled(Flex).attrs({
   vertical: true,
   gap: 12,
 })`
   margin-top: 24px;
 `;
 
-export const PurchuseCard = styled(Card).attrs({
+export const PurchaseCard = styled(Card).attrs({
   size: 'small',
   bordered: true,
   hoverable: true,

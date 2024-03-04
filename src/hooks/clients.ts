@@ -38,7 +38,7 @@ export const useClientActions = () => {
           fields: { ...fields, price: Number(fields.price), usedBonuses: Number(fields.usedBonuses) },
         },
       });
-      if (data?.createPurchase?.purchase?.id) {
+      if (data?.createPurchase?.purchasa?.id) {
         onSuccess?.();
         return;
       }
@@ -159,7 +159,6 @@ export const useClients = () => {
           }) as ClientT,
       )
       .sort(compareBirthdays);
-    console.log(clients);
     setInitClients(clients);
     setFilteredClients(clients);
   };
@@ -215,7 +214,7 @@ export const useClient = (clientId?: string) => {
   const parseClientData = (data: ClientPurchasesResponseType) => {
     const client = {
       ...data?.client,
-      birthday: new Date(data?.client?.birthday)?.toLocaleDateString('ru-RU'),
+      birthday: dayjs(data?.client.birthday, SERVER_DATE_FORMAT).format(LOCAL_DATE_FORMAT),
       id: data?.client?.phone?.slice(-4),
     };
     setClient(client);

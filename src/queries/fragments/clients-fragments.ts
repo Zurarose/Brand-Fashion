@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { PurchaseShortFragment } from './purchases-fragments';
 
 export const ClientShortFragment = gql`
   fragment ClientShortFragment on Client {
@@ -9,18 +10,6 @@ export const ClientShortFragment = gql`
     giftedBonuses
     birthday
     phone
-  }
-`;
-
-export const PurchaseShortFragment = gql`
-  fragment PurchaseShortFragment on Purchase {
-    id
-    objectId
-    price
-    bonuseReceived
-    date
-    usedBonuses
-    itemName
   }
 `;
 
