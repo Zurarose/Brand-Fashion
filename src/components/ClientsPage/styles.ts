@@ -1,3 +1,4 @@
+import { CrownFilled } from '@ant-design/icons';
 import { Card, Flex } from 'antd';
 import styled from 'styled-components';
 
@@ -15,4 +16,10 @@ export const ClientCard = styled(Card).attrs({
 })`
   border-width: 0.2px;
   border-color: ${({ theme }) => theme.palette.primary};
+`;
+
+export const BirthdayIcon = styled(CrownFilled)`
+  color: ${({ theme }) => theme.palette.primary};
+  margin-left: 4px;
+  box-sizing: border-box;
 `;

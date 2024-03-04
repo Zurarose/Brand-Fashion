@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { CreateClientRequestType } from '../../queries/client';
-import dayjs from 'dayjs';
 import { COUNTRY_CODE } from '../../constants/common';
 import { Button, DatePicker, DatePickerProps, Flex, Input, Modal, Typography } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
 
 type CreateClientStateType = Omit<CreateClientRequestType['fields'], 'birthday'> & { birthday: dayjs.Dayjs };
 
@@ -16,7 +16,7 @@ export const NewClientButton: React.FC<NewClientButtonProps> = ({ onCreate }) =>
   const [fields, setFields] = useState<CreateClientStateType>({
     fullName: '',
     phone: '',
-    birthday: dayjs('1990-05-05') as dayjs.Dayjs,
+    birthday: dayjs(),
   });
   const [errors, setErrors] = useState<Record<keyof CreateClientStateType, boolean>>({
     fullName: false,

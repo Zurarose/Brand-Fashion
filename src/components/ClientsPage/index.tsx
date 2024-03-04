@@ -1,15 +1,16 @@
 import React from 'react';
 import Search from 'antd/es/input/Search';
 import { Button, Descriptions, Flex } from 'antd';
-import { ClientCard, ClientsListWrapper } from './styles';
+import { BirthdayIcon, ClientCard, ClientsListWrapper } from './styles';
 import { ClientT } from '../../types/client';
 import { LoadingScreen } from '../../ui-kit/loading';
 import { CreateClientRequestType, CreatePurchaseRequestType } from '../../queries/client';
 import { DeleteButton } from '../ClientActions/DeleteButton';
 import { NewClientButton } from '../ClientActions/NewClientButton';
 import { PurchaseButton } from '../ClientActions/PurchaseButton';
-import { BarsOutlined, CrownOutlined } from '@ant-design/icons';
-
+import { BarsOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
+import { LOCAL_DATE_FORMAT } from '../../constants/common';
 export type ClientPageProps = {
   clients?: ClientT[];
   onSearch: (query: string) => void;
@@ -60,14 +61,11 @@ const ClientsList: React.FC<ClientsListProps> = ({ clients, onDelete, onCreatePu
   const handleRedirect = (id: string) => () => {
     clientInfoRedirect(id);
   };
-  const currentDay = `${new Date().getDate()}/${new Date().getMonth()}`;
-
+  const currentDate = dayjs().format('MM-DD');
   return (
     <ClientsListWrapper>
       {clients?.map((item) => {
-        const userBithday = `${new Date(item?.birthday).getDate()}/${new Date(item?.birthday).getMonth()}`;
-        const isBirthday = userBithday === currentDay;
-        console.log(currentDay, userBithday, item?.birthday);
+        const birthday = dayjs(item?.birthday, LOCAL_DATE_FORMAT)?.format('MM-DD');
         return (
           <ClientCard key={item?.objectId}>
             <Descriptions
@@ -87,7 +85,7 @@ const ClientsList: React.FC<ClientsListProps> = ({ clients, onDelete, onCreatePu
               <Descriptions.Item label="Bonuses">{item?.bonuses}</Descriptions.Item>
               <Descriptions.Item label="Gifted Bonuses">{item?.giftedBonuses}</Descriptions.Item>
               <Descriptions.Item label="Bithday">
-                {item?.birthday} {isBirthday && <CrownOutlined />}
+                {item?.birthday} {birthday === currentDate && <BirthdayIcon />}
               </Descriptions.Item>
               <Descriptions.Item label="Phone">{item?.phone}</Descriptions.Item>
             </Descriptions>

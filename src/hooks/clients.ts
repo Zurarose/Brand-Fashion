@@ -17,8 +17,9 @@ import {
 import { useViewerStore } from '../store/user';
 import { useState } from 'react';
 import { ClientT } from '../types/client';
-import { COUNTRY_CODE } from '../constants/common';
+import { COUNTRY_CODE, LOCAL_DATE_FORMAT, SERVER_DATE_FORMAT } from '../constants/common';
 import { message } from 'antd';
+import dayjs from 'dayjs';
 
 export const useClientActions = () => {
   const [messageApi, error] = message.useMessage();
@@ -148,14 +149,17 @@ export const useClients = () => {
   };
 
   const parseClientsData = (data: ClientsResponseType) => {
-    const clients = data?.clients?.edges?.map(
-      (client) =>
-        ({
-          ...client.node,
-          birthday: new Date(client.node?.birthday)?.toLocaleDateString('ru-RU'),
-          id: client?.node?.phone?.slice(-4),
-        }) as ClientT,
-    );
+    const clients = data?.clients?.edges
+      ?.map(
+        (client) =>
+          ({
+            ...client.node,
+            id: client?.node?.phone?.slice(-4),
+            birthday: dayjs(client?.node.birthday, SERVER_DATE_FORMAT).format(LOCAL_DATE_FORMAT),
+          }) as ClientT,
+      )
+      .sort(compareBirthdays);
+    console.log(clients);
     setInitClients(clients);
     setFilteredClients(clients);
   };
@@ -171,6 +175,15 @@ export const useClients = () => {
   };
 };
 
+// Function to compare birthdays
+const compareBirthdays = (clientA: ClientT, clientB: ClientT): number => {
+  const today = dayjs();
+  const birthdayA = dayjs(clientA.birthday, LOCAL_DATE_FORMAT).set('hours', 0).set('year', today.year());
+  const birthdayB = dayjs(clientB.birthday, LOCAL_DATE_FORMAT).set('hours', 0).set('year', today.year());
+  const diffA = Math.abs(today.diff(birthdayA, 'day'));
+  const diffB = Math.abs(today.diff(birthdayB, 'day'));
+  return diffA - diffB;
+};
 export const useClient = (clientId?: string) => {
   const { viewer } = useViewerStore();
   const [loading, setLoading] = useState(true);
