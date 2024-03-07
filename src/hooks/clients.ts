@@ -178,14 +178,13 @@ export const useClients = () => {
 
   const parseClientsData = (data: ClientsResponseType) => {
     const clients = data?.clients?.edges
-      ?.map(
-        (client) =>
-          ({
-            ...client.node,
-            id: client?.node?.phone?.slice(-4),
-            birthday: dayjs(client?.node.birthday, SERVER_DATE_FORMAT).format(LOCAL_DATE_FORMAT),
-          }) as ClientT,
-      )
+      ?.map((client) => {
+        return {
+          ...client.node,
+          id: client?.node?.phone?.slice(-4),
+          birthday: dayjs(client?.node.birthday, SERVER_DATE_FORMAT).format(LOCAL_DATE_FORMAT),
+        } as ClientT;
+      })
       .sort(compareBirthdays);
     setInitClients(clients);
     setFilteredClients(clients);
@@ -204,12 +203,21 @@ export const useClients = () => {
 
 // Function to compare birthdays
 const compareBirthdays = (clientA: ClientT, clientB: ClientT): number => {
-  const today = dayjs();
-  const birthdayA = dayjs(clientA.birthday, LOCAL_DATE_FORMAT).set('hours', 0).set('year', today.year());
-  const birthdayB = dayjs(clientB.birthday, LOCAL_DATE_FORMAT).set('hours', 0).set('year', today.year());
-  const diffA = Math.abs(today.diff(birthdayA, 'day'));
-  const diffB = Math.abs(today.diff(birthdayB, 'day'));
-  return diffA - diffB;
+  const today = dayjs().set('hours', 0);
+
+  const birthdayA = Math.abs(
+    today.unix() - dayjs(clientA.birthday, LOCAL_DATE_FORMAT).set('hours', 0).set('year', today.year()).unix(),
+  );
+  const birthdayB = Math.abs(
+    today.unix() - dayjs(clientB.birthday, LOCAL_DATE_FORMAT).set('hours', 0).set('year', today.year()).unix(),
+  );
+
+  if (birthdayA < birthdayB) {
+    return -1;
+  } else if (birthdayA > birthdayB) {
+    return 1;
+  }
+  return 0;
 };
 export const useClient = (clientId?: string) => {
   const { viewer } = useViewerStore();
