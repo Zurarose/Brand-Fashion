@@ -9,7 +9,6 @@ import { StatsState } from '../types/stats';
 
 export const useStats = () => {
   const [messageApi, error] = message.useMessage();
-
   const { viewer } = useViewerStore();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<StatsState>([]);

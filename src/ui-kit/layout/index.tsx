@@ -1,5 +1,5 @@
 import React from 'react';
-import { StockOutlined, UserOutlined } from '@ant-design/icons';
+import { SettingOutlined, StockOutlined, UserOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import { Logo, SContent, SHeader, SLayout, SSider } from './styles';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -24,6 +24,13 @@ export const AppLayout = () => {
       label: 'Stats',
       title: routes.stats,
       onClick: handleRedirect(routes.stats),
+    },
+    {
+      key: '3',
+      icon: <SettingOutlined />,
+      label: 'Settings',
+      title: routes.settings,
+      onClick: handleRedirect(routes.settings),
     },
   ];
 

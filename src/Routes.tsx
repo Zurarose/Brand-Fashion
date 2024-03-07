@@ -6,6 +6,7 @@ import { useAutoLogin } from './hooks/user';
 import { ClientInfoPageContainer } from './containers/ClientInfoPageContainer';
 import { StatsPageContainer } from './containers/StatsPageContainer';
 import { ClientsPageContainer } from './containers/ClientsPageContainer';
+import { SettingsPageContainer } from './containers/SettingsPageContainer';
 
 export const Routes = () => {
   const { error } = useAutoLogin();
@@ -18,6 +19,7 @@ export const Routes = () => {
           <Route index path={routes.clients} element={<ClientsPageContainer />} />
           <Route path={routes.client()} element={<ClientInfoPageContainer />} />
           <Route path={routes.stats} element={<StatsPageContainer />} />
+          <Route path={routes.settings} element={<SettingsPageContainer />} />
           <Route path="*" element={<Navigate to={routes.clients} replace />} />
         </Route>
       </Switch>
