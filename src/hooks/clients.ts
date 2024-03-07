@@ -13,6 +13,8 @@ import {
   DeleteClientMutation,
   DeleteClientRequestType,
   DeleteClientResponseType,
+  SetBonusesMutation,
+  SetBonusesRequestType,
 } from '../queries/client';
 import { useViewerStore } from '../store/user';
 import { useState } from 'react';
@@ -29,6 +31,31 @@ export const useClientActions = () => {
   const [createClient] = useMutation<CreateClientResponseType, CreateClientRequestType>(CreateClientMutation);
   const [createPurchase] = useMutation<CreatePurchaseResponseType, CreatePurchaseRequestType>(CreatePurchaseMutation);
   const [deleteClient] = useMutation<DeleteClientResponseType, DeleteClientRequestType>(DeleteClientMutation);
+  const [setBonus] = useMutation<boolean, SetBonusesRequestType>(SetBonusesMutation);
+
+  const onSetBonus = async (values: SetBonusesRequestType, onSuccess?: () => Promise<void>) => {
+    try {
+      setLoading(true);
+      const { data, errors } = await setBonus({
+        variables: {
+          ...values,
+        },
+      });
+      if (data && !errors?.[0]) {
+        onSuccess?.();
+        return;
+      }
+      throw new Error(errors?.[0]?.message);
+    } catch (error) {
+      if (error instanceof Error)
+        messageApi.open({
+          type: 'error',
+          content: error.message ? error.message : '',
+        });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const onCreatePurchase = async (fields: CreatePurchaseRequestType['fields'], onSuccess?: () => Promise<void>) => {
     try {
@@ -38,7 +65,7 @@ export const useClientActions = () => {
           fields: { ...fields, price: Number(fields.price), usedBonuses: Number(fields.usedBonuses) },
         },
       });
-      if (data?.createPurchase?.purchasa?.id) {
+      if (data?.createPurchase?.purchase?.id) {
         onSuccess?.();
         return;
       }
@@ -104,6 +131,7 @@ export const useClientActions = () => {
     onCreatePurchase,
     loading,
     onCreate,
+    onSetBonus,
   };
 };
 
@@ -187,7 +215,7 @@ export const useClient = (clientId?: string) => {
   const { viewer } = useViewerStore();
   const [loading, setLoading] = useState(true);
   const [client, setClient] = useState<ClientT | undefined>(undefined);
-  const { onCreatePurchase, onDelete, error } = useClientActions();
+  const { onCreatePurchase, onDelete, error, onSetBonus } = useClientActions();
 
   const { refetch } = useQuery<ClientPurchasesResponseType>(ClientPurchasesQuery, {
     variables: { id: clientId },
@@ -207,6 +235,10 @@ export const useClient = (clientId?: string) => {
     onDelete(id, onSuccess);
   };
 
+  const onSetBonuses = async (values: SetBonusesRequestType) => {
+    onSetBonus(values, onSuccess);
+  };
+
   const onCreateClientPurschuse = async (fields: CreatePurchaseRequestType['fields']) => {
     onCreatePurchase(fields, onSuccess);
   };
@@ -221,5 +253,5 @@ export const useClient = (clientId?: string) => {
     return;
   };
 
-  return { loading, error, client, onDelete: onDeleteClient, onCreatePurchase: onCreateClientPurschuse };
+  return { loading, error, client, onDelete: onDeleteClient, onCreatePurchase: onCreateClientPurschuse, onSetBonuses };
 };

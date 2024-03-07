@@ -78,7 +78,7 @@ export const CreateClientMutation = gql`
 
 export type CreatePurchaseResponseType = {
   createPurchase: {
-    purchasa: PurchaseT;
+    purchase: PurchaseT;
   };
 };
 
@@ -89,10 +89,21 @@ export type CreatePurchaseRequestType = {
 export const CreatePurchaseMutation = gql`
   mutation createPurchase($fields: CreatePurchaseFieldsInput!) {
     createPurchase(input: { fields: $fields }) {
-      purchasa {
+      purchase {
         ...PurchaseShortFragment
       }
     }
   }
   ${PurchaseShortFragment}
+`;
+export type SetBonusesRequestType = {
+  userId: string;
+  amount: number;
+  amountgifted: number;
+};
+
+export const SetBonusesMutation = gql`
+  mutation setBonuses($userId: String!, $amount: Float!, $amountgifted: Float!) {
+    setBonuses(userId: $userId, amount: $amount, amountgifted: $amountgifted)
+  }
 `;

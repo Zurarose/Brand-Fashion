@@ -1,9 +1,8 @@
 import React from 'react';
 import Search from 'antd/es/input/Search';
-import { Button, Descriptions, Flex } from 'antd';
+import { Button, Descriptions, Flex, Spin } from 'antd';
 import { BirthdayIcon, ClientCard, ClientsListWrapper } from './styles';
 import { ClientT } from '../../types/client';
-import { LoadingScreen } from '../../ui-kit/loading';
 import { CreateClientRequestType, CreatePurchaseRequestType } from '../../queries/client';
 import { DeleteButton } from '../ClientActions/DeleteButton';
 import { NewClientButton } from '../ClientActions/NewClientButton';
@@ -30,9 +29,9 @@ export const ClientsPage: React.FC<ClientPageProps> = ({
   onCreatePurchase,
   clientInfoRedirect,
 }) => {
-  if (loading) return <LoadingScreen />;
   return (
     <>
+      <Spin spinning={loading} fullscreen />
       <NavBar onSearch={onSearch} onCreate={onCreate} />
       <ClientsList
         clients={clients}

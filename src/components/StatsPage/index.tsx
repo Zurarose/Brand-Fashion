@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Button, Flex, Typography } from 'antd';
+import { Button, Flex, Spin, Typography } from 'antd';
 import { StyledPicker } from './styles';
 import dayjs from 'dayjs';
 import { Line, LineConfig } from '@ant-design/charts';
@@ -12,7 +12,7 @@ type StatsPageProps = {
   stats: StatsState;
 };
 
-export const StatsPage: React.FC<StatsPageProps> = ({ stats, onSearch }) => {
+export const StatsPage: React.FC<StatsPageProps> = ({ stats, onSearch, loading }) => {
   const [dates, setDates] = useState({ min: dayjs().startOf('year'), max: dayjs().endOf('year') });
 
   const graphSetting: LineConfig = {
@@ -36,24 +36,30 @@ export const StatsPage: React.FC<StatsPageProps> = ({ stats, onSearch }) => {
 
   const handleChange = (name: keyof typeof dates) => (value: dayjs.Dayjs | null) => {
     if (!value) return;
+    if (name === 'min' && value.isAfter(dates.max.subtract(1, 'month'))) {
+      setDates({ max: value.add(1, 'month'), [name]: value });
+      return;
+    }
     setDates((prev) => ({ ...prev, [name]: value }));
   };
 
-  const getDisabledDates = (current: dayjs.Dayjs) => {
+  const getDisabledDates = (name: keyof typeof dates) => (current: dayjs.Dayjs) => {
     return (
       current.isBefore(dayjs(MIN_GLOBAL_DATE, LOCAL_DATE_FORMAT).format(LOCAL_DATE_FORMAT)) ||
-      current.isAfter(dayjs().endOf('year'))
+      current.isAfter(dayjs().endOf('year')) ||
+      (name === 'max' && current.isBefore(dates.min.add(1, 'month')))
     );
   };
 
   return (
     <>
       <Flex vertical gap={12}>
+        <Spin spinning={loading} fullscreen />
         <Typography>Select date range below</Typography>
         <Flex gap={12}>
           <StyledPicker
             allowClear={false}
-            disabledDate={getDisabledDates}
+            disabledDate={getDisabledDates('min')}
             value={dates.min}
             onChange={handleChange('min')}
             format={'MM-YYYY'}
@@ -61,6 +67,7 @@ export const StatsPage: React.FC<StatsPageProps> = ({ stats, onSearch }) => {
           />
           <StyledPicker
             allowClear={false}
+            disabledDate={getDisabledDates('max')}
             value={dates.max}
             onChange={handleChange('max')}
             format={'MM-YYYY'}

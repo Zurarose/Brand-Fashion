@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 
 type DeleteButtonProps = {
   onDelete: (id: string) => Promise<void>;
@@ -20,7 +21,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({ onDelete, name, obje
       <Modal title="Confirm Delete Client" open={open} onOk={handleOk(objectId)} onCancel={toggleModal}>
         Delete client {name}?
       </Modal>
-      <Button onClick={toggleModal} type="primary">
+      <Button onClick={toggleModal} type="primary" icon={<DeleteOutlined />}>
         Delete
       </Button>
     </>

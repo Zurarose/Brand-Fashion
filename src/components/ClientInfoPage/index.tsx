@@ -1,44 +1,57 @@
 import React from 'react';
-import { CreatePurchaseRequestType } from '../../queries/client';
+import { CreatePurchaseRequestType, SetBonusesRequestType } from '../../queries/client';
 import { ClientT } from '../../types/client';
-import { LoadingScreen } from '../../ui-kit/loading';
-import { Descriptions, Flex } from 'antd';
+import { Descriptions, Flex, Spin } from 'antd';
 import { PurchaseButton } from '../ClientActions/PurchaseButton';
 import { DeleteButton } from '../ClientActions/DeleteButton';
 import { PurchaseCard, PurchasesListWrapper } from './styles';
 import { CURRENCY_SYMBOL } from '../../constants/common';
+import { SetBonusesButton } from '../ClientActions/SetBonusesButton';
 
 type ClientInfoPageProps = {
   onDelete: (id: string) => Promise<void>;
   onCreatePurchase: (fields: CreatePurchaseRequestType['fields']) => Promise<void>;
+  onSetBonuses: (values: SetBonusesRequestType) => Promise<void>;
   loading: boolean;
   client?: ClientT;
 };
 
-export const ClientInfoPage: React.FC<ClientInfoPageProps> = ({ loading, client, onCreatePurchase, onDelete }) => {
-  if (loading || !client) return <LoadingScreen />;
-
+export const ClientInfoPage: React.FC<ClientInfoPageProps> = ({
+  loading,
+  client,
+  onCreatePurchase,
+  onDelete,
+  onSetBonuses,
+}) => {
+  if (loading || !client) return <Spin spinning={true} fullscreen />;
   return (
-    <Flex justify="center" align="flex-start" gap={24} vertical>
-      <Descriptions
-        extra={
-          <Flex gap={12} align="center">
-            <PurchaseButton onCreatePurchase={onCreatePurchase} objectId={client?.objectId} />
-            <DeleteButton name={client?.fullName?.toUpperCase()} objectId={client?.objectId} onDelete={onDelete} />
-          </Flex>
-        }
-        layout="vertical"
-        size="middle"
-        title={client?.fullName?.toUpperCase()}>
-        <Descriptions.Item label="ID">{client?.id}</Descriptions.Item>
-        <Descriptions.Item label="Bonuses">{client?.bonuses}</Descriptions.Item>
-        <Descriptions.Item label="Gifted Bonuses">{client?.giftedBonuses}</Descriptions.Item>
-        <Descriptions.Item label="Bithday">{client?.birthday}</Descriptions.Item>
-        <Descriptions.Item label="Phone">{client?.phone}</Descriptions.Item>
-        <Descriptions.Item label="Total Purchases">{client?.Purchases?.edges?.length}</Descriptions.Item>
-      </Descriptions>
-      <PurchasesList purshuses={client?.Purchases} />
-    </Flex>
+    <>
+      <Flex justify="center" align="flex-start" gap={24} vertical>
+        <Descriptions
+          extra={
+            <Flex gap={12} align="center">
+              <PurchaseButton onCreatePurchase={onCreatePurchase} objectId={client?.objectId} />
+              <DeleteButton name={client?.fullName?.toUpperCase()} objectId={client?.objectId} onDelete={onDelete} />
+              <SetBonusesButton
+                objectId={client?.objectId}
+                initBonuses={{ amount: client?.bonuses, amountgifted: client?.giftedBonuses }}
+                onSetBonuses={onSetBonuses}
+              />
+            </Flex>
+          }
+          layout="vertical"
+          size="middle"
+          title={client?.fullName?.toUpperCase()}>
+          <Descriptions.Item label="ID">{client?.id}</Descriptions.Item>
+          <Descriptions.Item label="Bonuses">{client?.bonuses}</Descriptions.Item>
+          <Descriptions.Item label="Gifted Bonuses">{client?.giftedBonuses}</Descriptions.Item>
+          <Descriptions.Item label="Bithday">{client?.birthday}</Descriptions.Item>
+          <Descriptions.Item label="Phone">{client?.phone}</Descriptions.Item>
+          <Descriptions.Item label="Total Purchases">{client?.Purchases?.edges?.length}</Descriptions.Item>
+        </Descriptions>
+        <PurchasesList purshuses={client?.Purchases} />
+      </Flex>
+    </>
   );
 };
 

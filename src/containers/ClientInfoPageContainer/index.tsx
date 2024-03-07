@@ -5,12 +5,18 @@ import { ClientInfoPage } from '../../components/ClientInfoPage';
 
 export const ClientInfoPageContainer = () => {
   const { id } = useParams();
-  const { client, error, loading, onCreatePurchase, onDelete } = useClient(id);
+  const { client, error, loading, onCreatePurchase, onDelete, onSetBonuses } = useClient(id);
 
   return (
     <>
       {error}
-      <ClientInfoPage loading={loading} client={client} onCreatePurchase={onCreatePurchase} onDelete={onDelete} />
+      <ClientInfoPage
+        loading={loading}
+        client={client}
+        onCreatePurchase={onCreatePurchase}
+        onDelete={onDelete}
+        onSetBonuses={onSetBonuses}
+      />
     </>
   );
 };

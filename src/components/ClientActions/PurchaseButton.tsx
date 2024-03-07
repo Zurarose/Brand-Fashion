@@ -12,14 +12,16 @@ type PurchaseButtonProps = {
   onCreatePurchase: (fields: CreatePurchaseRequestType['fields']) => Promise<void>;
 };
 
+const initState = {
+  price: 0,
+  usedBonuses: 0,
+  itemName: '',
+  date: dayjs() as dayjs.Dayjs,
+};
+
 export const PurchaseButton: React.FC<PurchaseButtonProps> = ({ onCreatePurchase, objectId }) => {
   const [open, setOpen] = useState(false);
-  const [fields, setFields] = useState<CreatePurchaseStateType>({
-    price: 0,
-    usedBonuses: 0,
-    itemName: '',
-    date: dayjs() as dayjs.Dayjs,
-  });
+  const [fields, setFields] = useState<CreatePurchaseStateType>(initState);
   const [errors, setErrors] = useState<Record<keyof CreatePurchaseStateType, boolean>>({
     price: false,
     usedBonuses: false,
@@ -40,6 +42,9 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({ onCreatePurchase
   const toggleModal = () => setOpen((prev) => !prev);
 
   const handleOk = async () => {
+    if (!fields?.itemName) return setErrors((prev) => ({ ...prev, itemName: true }));
+    if (!fields?.price) return setErrors((prev) => ({ ...prev, price: true }));
+    if (!fields?.date) return setErrors((prev) => ({ ...prev, date: true }));
     await onCreatePurchase({
       ...fields,
       date: fields.date?.toDate(),
@@ -47,6 +52,8 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({ onCreatePurchase
         link: objectId,
       },
     });
+    toggleModal();
+    setFields(initState);
   };
 
   return (
