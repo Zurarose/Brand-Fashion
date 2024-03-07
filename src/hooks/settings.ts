@@ -23,7 +23,6 @@ export const useSettings = () => {
   const { refetch } = useQuery<SettingsQueryResponseType>(SettingsQuery, {
     skip: !viewer,
     onCompleted: (data) => {
-      console.log('here');
       setConfig(data?.getConfig);
       setLoading(false);
     },
@@ -36,7 +35,8 @@ export const useSettings = () => {
         variables: fields,
       });
       if (data) {
-        await refetch();
+        const { data } = await refetch();
+        setConfig(data?.getConfig);
         return;
       }
       throw new Error(errors?.[0]?.message);
