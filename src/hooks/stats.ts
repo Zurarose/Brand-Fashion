@@ -53,23 +53,41 @@ export const useStats = () => {
   };
 
   const parseStatsData = (data: StatsQueryResponseType) => {
-    const statsData: Record<string, number> = {};
+    const statsData: Record<string, { price: number; usedBonuses: number }> = {};
     data?.purchases?.edges?.forEach((purchuse) => {
       if (statsData[dayjs(purchuse?.node?.date, SERVER_DATE_FORMAT).format('MMMM')]) {
-        statsData[dayjs(purchuse?.node?.date, SERVER_DATE_FORMAT).format('MMMM')] += Number(purchuse?.node?.price);
+        statsData[dayjs(purchuse?.node?.date, SERVER_DATE_FORMAT).format('MMMM')] = {
+          price:
+            statsData[dayjs(purchuse?.node?.date, SERVER_DATE_FORMAT).format('MMMM')].price +
+            Number(purchuse?.node?.price),
+          usedBonuses:
+            statsData[dayjs(purchuse?.node?.date, SERVER_DATE_FORMAT).format('MMMM')].usedBonuses +
+            Number(purchuse?.node?.usedBonuses),
+        };
       } else {
         Object.assign(statsData, {
-          [dayjs(purchuse?.node?.date, SERVER_DATE_FORMAT).format('MMMM')]: Number(purchuse?.node?.price),
+          [dayjs(purchuse?.node?.date, SERVER_DATE_FORMAT).format('MMMM')]: {
+            price: Number(purchuse?.node?.price),
+            usedBonuses: Number(purchuse?.node?.usedBonuses),
+          },
         });
       }
     });
-    const parsedStats = Object.keys(statsData).map((key) => {
-      return {
+    const arr: StatsState = [];
+    Object.keys(statsData).forEach((key) => {
+      arr.push({
         month: key,
-        value: statsData[key],
-      };
+        value: statsData[key].price,
+        category: 'Total sales',
+      });
+      arr.push({
+        month: key,
+        value: statsData[key].usedBonuses,
+        category: 'Total used bonuses',
+      });
     });
-    setStats(parsedStats);
+    console.log(arr);
+    setStats(arr);
     return;
   };
 

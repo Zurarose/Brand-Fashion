@@ -1,11 +1,10 @@
 import React, { useMemo, useState } from 'react';
-import { Button, Flex, Spin, Typography } from 'antd';
+import { Button, Descriptions, Flex, Spin, Typography } from 'antd';
 import { StyledPicker } from './styles';
 import dayjs from 'dayjs';
 import { Line, LineConfig } from '@ant-design/charts';
 import { StatsState } from '../../types/stats';
 import { CURRENCY_SYMBOL, LOCAL_DATE_FORMAT, MIN_GLOBAL_DATE } from '../../constants/common';
-import theme from '../../ui-kit/theme';
 type StatsPageProps = {
   loading: boolean;
   onSearch: (startDate: Date, endDate: Date) => Promise<void>;
@@ -19,16 +18,32 @@ export const StatsPage: React.FC<StatsPageProps> = ({ stats, onSearch, loading }
     data: stats,
     xField: 'month',
     yField: 'value',
-    colorField: theme.palette.primary,
+    sizeField: 'value',
+    colorField: 'category',
+    legend: false,
     style: {
-      fill: theme.palette.primary,
-      stroke: theme.palette.primary,
-      lineWidth: 2,
+      lineWidth: 3,
       cursor: 'pointer',
     },
   };
 
-  const totalSales = useMemo(() => stats.reduce((acc, curr) => acc + curr.value, 0).toFixed(2), [stats]);
+  const totalSales = useMemo(
+    () =>
+      stats
+        .filter((item) => item.category === 'Total sales')
+        .reduce((acc, curr) => acc + curr.value, 0)
+        .toFixed(2),
+    [stats],
+  );
+
+  const totalUsedBonuses = useMemo(
+    () =>
+      stats
+        .filter((item) => item.category === 'Total used bonuses')
+        .reduce((acc, curr) => acc + curr.value, 0)
+        .toFixed(2),
+    [stats],
+  );
 
   const handleSearch = async () => {
     await onSearch(dates.min.toDate(), dates.max.toDate());
@@ -78,9 +93,12 @@ export const StatsPage: React.FC<StatsPageProps> = ({ stats, onSearch, loading }
           </Button>
         </Flex>
         <Line {...graphSetting} />
-        <Typography>
-          Total sales price: {totalSales} {CURRENCY_SYMBOL}
-        </Typography>
+        <Descriptions>
+          <Descriptions.Item label="Total sales price">
+            {totalSales} {CURRENCY_SYMBOL}
+          </Descriptions.Item>
+          <Descriptions.Item label="Total bonuses used">{totalUsedBonuses} bonuses</Descriptions.Item>
+        </Descriptions>
       </Flex>
     </>
   );
