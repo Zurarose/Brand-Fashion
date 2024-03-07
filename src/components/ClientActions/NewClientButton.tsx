@@ -11,13 +11,15 @@ type NewClientButtonProps = {
   onCreate: (fields: CreateClientRequestType['fields']) => Promise<void>;
 };
 
+const initState = {
+  fullName: '',
+  phone: '',
+  birthday: dayjs(),
+};
+
 export const NewClientButton: React.FC<NewClientButtonProps> = ({ onCreate }) => {
   const [open, setOpen] = useState(false);
-  const [fields, setFields] = useState<CreateClientStateType>({
-    fullName: '',
-    phone: '',
-    birthday: dayjs(),
-  });
+  const [fields, setFields] = useState<CreateClientStateType>(initState);
   const [errors, setErrors] = useState<Record<keyof CreateClientStateType, boolean>>({
     fullName: false,
     phone: false,
@@ -35,6 +37,8 @@ export const NewClientButton: React.FC<NewClientButtonProps> = ({ onCreate }) =>
       ...fields,
       birthday: fields.birthday?.toDate(),
     });
+    toggleModal();
+    setFields(initState);
   };
 
   const onChange = (name: keyof CreateClientStateType) => (input: React.ChangeEvent<HTMLInputElement>) => {
