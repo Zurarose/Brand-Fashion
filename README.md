@@ -2,10 +2,16 @@ The project was created for the Brand Fashion company to manage its customer bas
 
 # How to start the project
 
-### DEV MODE
+### TO START THE SERVER
+
+`Download Devops and Server repo and run build & run docker commands`
+
+### TO START THE WEB APP
+
+##### DEV MODE
 
 `npm run dev`
 
-### PROD PREVIEW
+##### PROD PREVIEW
 
 `npm run build && npm run preview`
