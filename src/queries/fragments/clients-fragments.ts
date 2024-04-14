@@ -22,7 +22,7 @@ export const ClientFullFragment = gql`
     giftedBonuses
     birthday
     phone
-    Purchases {
+    Purchases(order: [date_DESC]) {
       edges {
         node {
           ...PurchaseShortFragment
