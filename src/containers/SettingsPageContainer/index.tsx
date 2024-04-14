@@ -3,11 +3,11 @@ import { useSettings } from '../../hooks/settings';
 import { SettingsPage } from '../../components/SettingsPage';
 
 export const SettingsPageContainer = () => {
-  const { config, error, loading, onSetConfig } = useSettings();
+  const { settings, error, loading, onSetConfig } = useSettings();
   return (
     <>
       {error}
-      <SettingsPage config={config} loading={loading} onSetConfig={onSetConfig} />
+      <SettingsPage config={settings} loading={loading} onSetConfig={onSetConfig} />
     </>
   );
 };

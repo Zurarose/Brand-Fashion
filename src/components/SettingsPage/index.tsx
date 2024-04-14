@@ -16,6 +16,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ config, loading, onS
     GETTING_PERCENT_BONUSES: false,
     GIFT_BONUSES_USER_BIRTHDAY: false,
     LIMITED_BONUSES_TIMEOUT_DAYS: false,
+    MAX_BONUSES_PER_PURCHASE_PERCENT: false,
   });
 
   const handleChange = (name: keyof typeof stateConfig) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,12 +30,20 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ config, loading, onS
       return setError((prev) => ({ ...prev, GIFT_BONUSES_USER_BIRTHDAY: true }));
     if (!stateConfig.LIMITED_BONUSES_TIMEOUT_DAYS)
       return setError((prev) => ({ ...prev, LIMITED_BONUSES_TIMEOUT_DAYS: true }));
+    if (!stateConfig.MAX_BONUSES_PER_PURCHASE_PERCENT)
+      return setError((prev) => ({ ...prev, MAX_BONUSES_PER_PURCHASE_PERCENT: true }));
     onSetConfig(stateConfig);
   };
 
   useEffect(() => {
     setStateConfig(config);
-  }, [config, config.GETTING_PERCENT_BONUSES, config.GIFT_BONUSES_USER_BIRTHDAY, config.LIMITED_BONUSES_TIMEOUT_DAYS]);
+  }, [
+    config,
+    config.GETTING_PERCENT_BONUSES,
+    config.GIFT_BONUSES_USER_BIRTHDAY,
+    config.LIMITED_BONUSES_TIMEOUT_DAYS,
+    config.MAX_BONUSES_PER_PURCHASE_PERCENT,
+  ]);
 
   return (
     <>
@@ -61,6 +70,17 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ config, loading, onS
           variant="outlined"
           type="number"
           onChange={handleChange('GIFT_BONUSES_USER_BIRTHDAY')}
+        />
+        <Typography>How much percent from price can be used as bonuses for purchase</Typography>
+        <Input
+          addonAfter={<GiftOutlined />}
+          status={errors.MAX_BONUSES_PER_PURCHASE_PERCENT ? 'error' : ''}
+          name={'MAX_BONUSES_PER_PURCHASE_PERCENT'}
+          value={stateConfig.MAX_BONUSES_PER_PURCHASE_PERCENT}
+          placeholder="Enter how much percent from price can be used as bonuses for purchase"
+          variant="outlined"
+          type="number"
+          onChange={handleChange('MAX_BONUSES_PER_PURCHASE_PERCENT')}
         />
         <Typography>How much days gifted bonuses will be active</Typography>
         <Input

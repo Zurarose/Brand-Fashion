@@ -11,6 +11,7 @@ type PurchaseButtonProps = {
   objectId: string;
   onCreatePurchase: (fields: CreatePurchaseRequestType['fields']) => Promise<void>;
   totalBonuses: number;
+  percentFromPriceAsBonuses: number;
 };
 
 const initState = {
@@ -20,7 +21,12 @@ const initState = {
   date: dayjs() as dayjs.Dayjs,
 };
 
-export const PurchaseButton: React.FC<PurchaseButtonProps> = ({ onCreatePurchase, objectId, totalBonuses }) => {
+export const PurchaseButton: React.FC<PurchaseButtonProps> = ({
+  onCreatePurchase,
+  objectId,
+  totalBonuses,
+  percentFromPriceAsBonuses,
+}) => {
   const [open, setOpen] = useState(false);
   const [fields, setFields] = useState<CreatePurchaseStateType>(initState);
   const [errors, setErrors] = useState<Record<keyof CreatePurchaseStateType, boolean>>({
@@ -29,7 +35,6 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({ onCreatePurchase
     itemName: false,
     date: false,
   });
-
   const onChange = (name: keyof CreatePurchaseStateType) => (input: React.ChangeEvent<HTMLInputElement>) => {
     if (name === 'usedBonuses' && Number(input?.target?.value) > totalBonuses) {
       input.target.value = String(totalBonuses);
@@ -49,6 +54,9 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({ onCreatePurchase
     if (!fields?.itemName) return setErrors((prev) => ({ ...prev, itemName: true }));
     if (!fields?.price) return setErrors((prev) => ({ ...prev, price: true }));
     if (!fields?.date) return setErrors((prev) => ({ ...prev, date: true }));
+    if (Number(fields.usedBonuses) > (fields.price / 100) * percentFromPriceAsBonuses)
+      return setErrors((prev) => ({ ...prev, usedBonuses: true }));
+
     await onCreatePurchase({
       ...fields,
       date: fields.date?.toDate(),
@@ -64,7 +72,7 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({ onCreatePurchase
     <>
       <Modal title="New Purchase" open={open} onOk={handleOk} onCancel={toggleModal}>
         <Flex gap={12} vertical>
-          <Typography.Paragraph>Item Name</Typography.Paragraph>
+          <Typography.Paragraph>Item Name {percentFromPriceAsBonuses}</Typography.Paragraph>
           <Input
             name={'itemName'}
             value={fields.itemName}
@@ -84,7 +92,9 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({ onCreatePurchase
             type="number"
             onChange={onChange('price')}
           />
-          <Typography.Paragraph>Bonuses to use</Typography.Paragraph>
+          <Typography.Paragraph>
+            Bonuses to use {errors.usedBonuses && `(Max percent is ${percentFromPriceAsBonuses}!)`}
+          </Typography.Paragraph>
           <Input
             addonAfter={<StarOutlined />}
             name={'usedBonuses'}

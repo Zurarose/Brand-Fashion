@@ -14,6 +14,7 @@ type ClientInfoPageProps = {
   onSetBonuses: (values: SetBonusesRequestType) => Promise<void>;
   loading: boolean;
   client?: ClientT;
+  percentFromPriceAsBonuses: number;
 };
 
 export const ClientInfoPage: React.FC<ClientInfoPageProps> = ({
@@ -22,6 +23,7 @@ export const ClientInfoPage: React.FC<ClientInfoPageProps> = ({
   onCreatePurchase,
   onDelete,
   onSetBonuses,
+  percentFromPriceAsBonuses,
 }) => {
   if (loading || !client) return <Spin spinning={true} fullscreen />;
   return (
@@ -34,6 +36,7 @@ export const ClientInfoPage: React.FC<ClientInfoPageProps> = ({
                 onCreatePurchase={onCreatePurchase}
                 objectId={client?.objectId}
                 totalBonuses={client?.bonuses + client?.giftedBonuses}
+                percentFromPriceAsBonuses={percentFromPriceAsBonuses}
               />
               <DeleteButton name={client?.fullName?.toUpperCase()} objectId={client?.objectId} onDelete={onDelete} />
               <SetBonusesButton

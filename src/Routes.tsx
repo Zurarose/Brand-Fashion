@@ -7,10 +7,11 @@ import { ClientInfoPageContainer } from './containers/ClientInfoPageContainer';
 import { StatsPageContainer } from './containers/StatsPageContainer';
 import { ClientsPageContainer } from './containers/ClientsPageContainer';
 import { SettingsPageContainer } from './containers/SettingsPageContainer';
+import { useSettings } from './hooks/settings';
 
 export const Routes = () => {
   const { error } = useAutoLogin();
-
+  useSettings();
   return (
     <>
       {error}

@@ -8,22 +8,19 @@ import {
 } from '../queries/settings';
 import { useState } from 'react';
 import { message } from 'antd';
+import { useSettingsStore } from '../store/settings';
 
 export const useSettings = () => {
+  const { setSettings, settings } = useSettingsStore();
   const [messageApi, error] = message.useMessage();
   const { viewer } = useViewerStore();
   const [loading, setLoading] = useState(true);
-  const [config, setConfig] = useState<SettingsQueryResponseType['getConfig']>({
-    GETTING_PERCENT_BONUSES: 0,
-    GIFT_BONUSES_USER_BIRTHDAY: 0,
-    LIMITED_BONUSES_TIMEOUT_DAYS: 0,
-  });
 
   const [updateConfig] = useMutation<boolean, SettingsQueryRequsetType>(SetSettingsMutation);
   const { refetch } = useQuery<SettingsQueryResponseType>(SettingsQuery, {
     skip: !viewer,
     onCompleted: (data) => {
-      setConfig(data?.getConfig);
+      setSettings(data?.getConfig);
       setLoading(false);
     },
   });
@@ -36,7 +33,7 @@ export const useSettings = () => {
       });
       if (data) {
         const { data } = await refetch();
-        setConfig(data?.getConfig);
+        setSettings(data?.getConfig);
         return;
       }
       throw new Error(errors?.[0]?.message);
@@ -53,7 +50,7 @@ export const useSettings = () => {
 
   return {
     error,
-    config,
+    settings,
     loading,
     onSetConfig,
   };

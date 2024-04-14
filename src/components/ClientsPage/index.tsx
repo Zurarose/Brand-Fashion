@@ -18,6 +18,7 @@ export type ClientPageProps = {
   onCreatePurchase: (fields: CreatePurchaseRequestType['fields']) => Promise<void>;
   loading: boolean;
   clientInfoRedirect: (id: string) => void;
+  percentFromPriceAsBonuses: number;
 };
 
 export const ClientsPage: React.FC<ClientPageProps> = ({
@@ -28,6 +29,7 @@ export const ClientsPage: React.FC<ClientPageProps> = ({
   onCreate,
   onCreatePurchase,
   clientInfoRedirect,
+  percentFromPriceAsBonuses,
 }) => {
   return (
     <>
@@ -38,6 +40,7 @@ export const ClientsPage: React.FC<ClientPageProps> = ({
         onDelete={onDelete}
         onCreatePurchase={onCreatePurchase}
         clientInfoRedirect={clientInfoRedirect}
+        percentFromPriceAsBonuses={percentFromPriceAsBonuses}
       />
     </>
   );
@@ -54,9 +57,18 @@ const NavBar: React.FC<NavBarProps> = ({ onSearch, onCreate }) => {
   );
 };
 
-type ClientsListProps = Pick<ClientPageProps, 'clients' | 'onDelete' | 'onCreatePurchase' | 'clientInfoRedirect'>;
+type ClientsListProps = Pick<
+  ClientPageProps,
+  'clients' | 'onDelete' | 'onCreatePurchase' | 'clientInfoRedirect' | 'percentFromPriceAsBonuses'
+>;
 
-const ClientsList: React.FC<ClientsListProps> = ({ clients, onDelete, onCreatePurchase, clientInfoRedirect }) => {
+const ClientsList: React.FC<ClientsListProps> = ({
+  clients,
+  onDelete,
+  onCreatePurchase,
+  clientInfoRedirect,
+  percentFromPriceAsBonuses,
+}) => {
   const handleRedirect = (id: string) => () => {
     clientInfoRedirect(id);
   };
@@ -74,6 +86,7 @@ const ClientsList: React.FC<ClientsListProps> = ({ clients, onDelete, onCreatePu
                     onCreatePurchase={onCreatePurchase}
                     objectId={client?.objectId}
                     totalBonuses={client?.bonuses + client?.giftedBonuses}
+                    percentFromPriceAsBonuses={percentFromPriceAsBonuses}
                   />
                   <Button type="primary" onClick={handleRedirect(client?.objectId)} icon={<BarsOutlined />}>
                     Info
