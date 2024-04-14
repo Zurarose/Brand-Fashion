@@ -10,6 +10,7 @@ type CreatePurchaseStateType = Omit<CreatePurchaseRequestType['fields'], 'date' 
 type PurchaseButtonProps = {
   objectId: string;
   onCreatePurchase: (fields: CreatePurchaseRequestType['fields']) => Promise<void>;
+  totalBonuses: number;
 };
 
 const initState = {
@@ -19,7 +20,7 @@ const initState = {
   date: dayjs() as dayjs.Dayjs,
 };
 
-export const PurchaseButton: React.FC<PurchaseButtonProps> = ({ onCreatePurchase, objectId }) => {
+export const PurchaseButton: React.FC<PurchaseButtonProps> = ({ onCreatePurchase, objectId, totalBonuses }) => {
   const [open, setOpen] = useState(false);
   const [fields, setFields] = useState<CreatePurchaseStateType>(initState);
   const [errors, setErrors] = useState<Record<keyof CreatePurchaseStateType, boolean>>({
@@ -30,6 +31,9 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({ onCreatePurchase
   });
 
   const onChange = (name: keyof CreatePurchaseStateType) => (input: React.ChangeEvent<HTMLInputElement>) => {
+    if (name === 'usedBonuses' && Number(input?.target?.value) > totalBonuses) {
+      input.target.value = String(totalBonuses);
+    }
     setFields((prev) => ({ ...prev, [name]: input?.target?.value }));
     setErrors((prev) => ({ ...prev, [name]: false }));
   };

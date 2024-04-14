@@ -63,30 +63,38 @@ const ClientsList: React.FC<ClientsListProps> = ({ clients, onDelete, onCreatePu
   const currentDate = dayjs().format('MM-DD');
   return (
     <ClientsListWrapper>
-      {clients?.map((item) => {
-        const birthday = dayjs(item?.birthday, LOCAL_DATE_FORMAT)?.format('MM-DD');
+      {clients?.map((client) => {
+        const birthday = dayjs(client?.birthday, LOCAL_DATE_FORMAT)?.format('MM-DD');
         return (
-          <ClientCard key={item?.objectId}>
+          <ClientCard key={client?.objectId}>
             <Descriptions
               extra={
                 <Flex gap={12} align="center">
-                  <PurchaseButton onCreatePurchase={onCreatePurchase} objectId={item?.objectId} />
-                  <Button type="primary" onClick={handleRedirect(item?.objectId)} icon={<BarsOutlined />}>
+                  <PurchaseButton
+                    onCreatePurchase={onCreatePurchase}
+                    objectId={client?.objectId}
+                    totalBonuses={client?.bonuses + client?.giftedBonuses}
+                  />
+                  <Button type="primary" onClick={handleRedirect(client?.objectId)} icon={<BarsOutlined />}>
                     Info
                   </Button>
-                  <DeleteButton name={item?.fullName?.toUpperCase()} objectId={item?.objectId} onDelete={onDelete} />
+                  <DeleteButton
+                    name={client?.fullName?.toUpperCase()}
+                    objectId={client?.objectId}
+                    onDelete={onDelete}
+                  />
                 </Flex>
               }
               column={6}
               size="small"
-              title={item?.fullName?.toUpperCase()}>
-              <Descriptions.Item label="ID">{item?.id}</Descriptions.Item>
-              <Descriptions.Item label="Bonuses">{item?.bonuses}</Descriptions.Item>
-              <Descriptions.Item label="Gifted Bonuses">{item?.giftedBonuses}</Descriptions.Item>
+              title={client?.fullName?.toUpperCase()}>
+              <Descriptions.Item label="ID">{client?.id}</Descriptions.Item>
+              <Descriptions.Item label="Bonuses">{client?.bonuses}</Descriptions.Item>
+              <Descriptions.Item label="Gifted Bonuses">{client?.giftedBonuses}</Descriptions.Item>
               <Descriptions.Item label="Bithday">
-                {item?.birthday} {birthday === currentDate && <BirthdayIcon />}
+                {client?.birthday} {birthday === currentDate && <BirthdayIcon />}
               </Descriptions.Item>
-              <Descriptions.Item label="Phone">{item?.phone}</Descriptions.Item>
+              <Descriptions.Item label="Phone">{client?.phone}</Descriptions.Item>
             </Descriptions>
           </ClientCard>
         );

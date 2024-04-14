@@ -30,7 +30,11 @@ export const ClientInfoPage: React.FC<ClientInfoPageProps> = ({
         <Descriptions
           extra={
             <Flex gap={12} align="center">
-              <PurchaseButton onCreatePurchase={onCreatePurchase} objectId={client?.objectId} />
+              <PurchaseButton
+                onCreatePurchase={onCreatePurchase}
+                objectId={client?.objectId}
+                totalBonuses={client?.bonuses + client?.giftedBonuses}
+              />
               <DeleteButton name={client?.fullName?.toUpperCase()} objectId={client?.objectId} onDelete={onDelete} />
               <SetBonusesButton
                 objectId={client?.objectId}
