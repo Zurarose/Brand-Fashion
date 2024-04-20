@@ -16,6 +16,7 @@ export const ClientCard = styled(Card).attrs({
 })`
   border-width: 0.2px;
   border-color: ${({ theme }) => theme.palette.primary};
+  margin-top: 12px;
 `;
 
 export const BirthdayIcon = styled(CrownFilled)`

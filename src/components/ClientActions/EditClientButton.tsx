@@ -1,26 +1,31 @@
 import React, { useState } from 'react';
-import { CreateClientRequestType } from '../../queries/client';
-import { COUNTRY_CODE, LOCAL_DATE_FORMAT } from '../../constants/common';
 import { Button, DatePicker, DatePickerProps, Flex, Input, Modal, Typography } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { CreateClientRequestType, EditClientRequestType } from '../../queries/client';
+import { COUNTRY_CODE, LOCAL_DATE_FORMAT } from '../../constants/common';
 import dayjs from 'dayjs';
+import { EditFilled } from '@ant-design/icons';
 
-type CreateClientStateType = Omit<CreateClientRequestType['fields'], 'birthday'> & { birthday: dayjs.Dayjs };
+type EditClientStateType = Omit<CreateClientRequestType['fields'], 'birthday'> & { birthday: dayjs.Dayjs };
 
-type NewClientButtonProps = {
-  onCreate: (fields: CreateClientRequestType['fields']) => Promise<void>;
+type EditClientButtonProps = EditClientRequestType['fields'] & {
+  objectId: string;
+  onEditClient: (id: string, values: EditClientRequestType['fields']) => Promise<void>;
 };
 
-const initState = {
-  fullName: '',
-  phone: '',
-  birthday: dayjs(),
-};
-
-export const NewClientButton: React.FC<NewClientButtonProps> = ({ onCreate }) => {
+export const EditClientButton: React.FC<EditClientButtonProps> = ({
+  onEditClient,
+  objectId,
+  birthday,
+  fullName,
+  phone,
+}) => {
   const [open, setOpen] = useState(false);
-  const [fields, setFields] = useState<CreateClientStateType>(initState);
-  const [errors, setErrors] = useState<Record<keyof CreateClientStateType, boolean>>({
+  const [fields, setFields] = useState<EditClientStateType>({
+    birthday: dayjs(birthday),
+    fullName: fullName,
+    phone: phone?.slice(4),
+  });
+  const [errors, setErrors] = useState<Record<keyof EditClientStateType, boolean>>({
     fullName: false,
     phone: false,
     birthday: false,
@@ -32,16 +37,14 @@ export const NewClientButton: React.FC<NewClientButtonProps> = ({ onCreate }) =>
     if (!fields?.birthday) return setErrors((prev) => ({ ...prev, birthday: true }));
     if (!fields?.fullName) return setErrors((prev) => ({ ...prev, fullName: true }));
     if (!fields?.phone || fields?.phone?.length < 9) return setErrors((prev) => ({ ...prev, phone: true }));
-
-    await onCreate({
+    await onEditClient(objectId, {
       ...fields,
-      birthday: fields.birthday?.toDate(),
+      birthday: fields?.birthday?.toDate(),
     });
     toggleModal();
-    setFields(initState);
   };
 
-  const onChange = (name: keyof CreateClientStateType) => (input: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (name: keyof EditClientStateType) => (input: React.ChangeEvent<HTMLInputElement>) => {
     if (name === 'phone' && input?.target?.value.length > 9) return;
     setFields((prev) => ({ ...prev, [name]: input?.target?.value }));
     setErrors((prev) => ({ ...prev, [name]: false }));
@@ -86,8 +89,8 @@ export const NewClientButton: React.FC<NewClientButtonProps> = ({ onCreate }) =>
           />
         </Flex>
       </Modal>
-      <Button size="large" type="primary" onClick={toggleModal} icon={<PlusOutlined />}>
-        Add New Client
+      <Button size="middle" type="primary" onClick={toggleModal} icon={<EditFilled />}>
+        Edit
       </Button>
     </>
   );

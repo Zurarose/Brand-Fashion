@@ -10,6 +10,8 @@ import { PurchaseButton } from '../ClientActions/PurchaseButton';
 import { BarsOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { LOCAL_DATE_FORMAT } from '../../constants/common';
+import List from 'rc-virtual-list';
+
 export type ClientPageProps = {
   clients?: ClientT[];
   onSearch: (query: string) => void;
@@ -75,43 +77,44 @@ const ClientsList: React.FC<ClientsListProps> = ({
   const currentDate = dayjs().format('MM-DD');
   return (
     <ClientsListWrapper>
-      {clients?.map((client) => {
-        const birthday = dayjs(client?.birthday, LOCAL_DATE_FORMAT)?.format('MM-DD');
-        return (
-          <ClientCard key={client?.objectId}>
-            <Descriptions
-              extra={
-                <Flex gap={12} align="center">
-                  <PurchaseButton
-                    onCreatePurchase={onCreatePurchase}
-                    objectId={client?.objectId}
-                    totalBonuses={client?.bonuses + client?.giftedBonuses}
-                    percentFromPriceAsBonuses={percentFromPriceAsBonuses}
-                  />
-                  <Button type="primary" onClick={handleRedirect(client?.objectId)} icon={<BarsOutlined />}>
-                    Info
-                  </Button>
-                  <DeleteButton
-                    name={client?.fullName?.toUpperCase()}
-                    objectId={client?.objectId}
-                    onDelete={onDelete}
-                  />
-                </Flex>
-              }
-              column={6}
-              size="small"
-              title={client?.fullName?.toUpperCase()}>
-              <Descriptions.Item label="ID">{client?.id}</Descriptions.Item>
-              <Descriptions.Item label="Bonuses">{client?.bonuses}</Descriptions.Item>
-              <Descriptions.Item label="Gifted Bonuses">{client?.giftedBonuses}</Descriptions.Item>
-              <Descriptions.Item label="Bithday">
-                {client?.birthday} {birthday === currentDate && <BirthdayIcon />}
-              </Descriptions.Item>
-              <Descriptions.Item label="Phone">{client?.phone}</Descriptions.Item>
-            </Descriptions>
-          </ClientCard>
-        );
-      })}
+      <List<ClientT> data={clients || []} height={document.body.clientHeight - 155} itemHeight={160} itemKey="id">
+        {(client) => {
+          const birthday = dayjs(client?.birthday, LOCAL_DATE_FORMAT)?.format('MM-DD');
+          return (
+            <ClientCard key={client?.objectId}>
+              <Descriptions
+                extra={
+                  <Flex gap={12} align="center">
+                    <PurchaseButton
+                      onCreatePurchase={onCreatePurchase}
+                      objectId={client?.objectId}
+                      totalBonuses={client?.bonuses + client?.giftedBonuses}
+                      percentFromPriceAsBonuses={percentFromPriceAsBonuses}
+                    />
+                    <Button type="primary" onClick={handleRedirect(client?.objectId)} icon={<BarsOutlined />}>
+                      Info
+                    </Button>
+                    <DeleteButton
+                      name={client?.fullName?.toUpperCase()}
+                      objectId={client?.objectId}
+                      onDelete={onDelete}
+                    />
+                  </Flex>
+                }
+                size="small"
+                title={client?.fullName?.toUpperCase()}>
+                <Descriptions.Item label="ID">{client?.id}</Descriptions.Item>
+                <Descriptions.Item label="Bonuses">{client?.bonuses}</Descriptions.Item>
+                <Descriptions.Item label="Phone">{client?.phone}</Descriptions.Item>
+                <Descriptions.Item label="Bithday">
+                  {client?.birthday} {birthday === currentDate && <BirthdayIcon />}
+                </Descriptions.Item>
+                <Descriptions.Item label="Gifted Bonuses">{client?.giftedBonuses}</Descriptions.Item>
+              </Descriptions>
+            </ClientCard>
+          );
+        }}
+      </List>
     </ClientsListWrapper>
   );
 };

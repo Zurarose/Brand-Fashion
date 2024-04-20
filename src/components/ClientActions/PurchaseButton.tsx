@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, DatePicker, DatePickerProps, Flex, Input, Modal, Typography } from 'antd';
 import { CreatePurchaseRequestType } from '../../queries/client';
 import dayjs from 'dayjs';
-import { CURRENCY_SYMBOL } from '../../constants/common';
+import { CURRENCY_SYMBOL, LOCAL_DATE_FORMAT } from '../../constants/common';
 import { PlusOutlined, StarOutlined } from '@ant-design/icons';
 
 type CreatePurchaseStateType = Omit<CreatePurchaseRequestType['fields'], 'date' | 'Client'> & { date: dayjs.Dayjs };
@@ -44,8 +44,8 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({
   };
 
   const onChangeDate: DatePickerProps['onChange'] = (date) => {
-    if (date) setFields((prev) => ({ ...prev, birthday: date }));
-    setErrors((prev) => ({ ...prev, birthday: false }));
+    if (date) setFields((prev) => ({ ...prev, date: date }));
+    setErrors((prev) => ({ ...prev, date: false }));
   };
 
   const toggleModal = () => setOpen((prev) => !prev);
@@ -72,7 +72,7 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({
     <>
       <Modal title="New Purchase" open={open} onOk={handleOk} onCancel={toggleModal}>
         <Flex gap={12} vertical>
-          <Typography.Paragraph>Item Name {percentFromPriceAsBonuses}</Typography.Paragraph>
+          <Typography.Paragraph>Item Name</Typography.Paragraph>
           <Input
             name={'itemName'}
             value={fields.itemName}
@@ -110,7 +110,8 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({
             status={errors.date ? 'error' : ''}
             value={fields.date}
             onChange={onChangeDate}
-            format="DD-MM-YYYY"
+            format={LOCAL_DATE_FORMAT}
+            changeOnBlur
             allowClear={false}
           />
         </Flex>

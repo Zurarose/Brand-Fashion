@@ -107,3 +107,25 @@ export const SetBonusesMutation = gql`
     setBonuses(userId: $userId, amount: $amount, amountgifted: $amountgifted)
   }
 `;
+
+export type EditClientResponseType = {
+  updateClient: {
+    client: ClientT;
+  };
+};
+
+export type EditClientRequestType = {
+  id: string;
+  fields: Pick<ClientT, 'fullName' | 'phone'> & { birthday: Date };
+};
+
+export const EditClientMutation = gql`
+  mutation updateClient($id: ID!, $fields: UpdateClientFieldsInput!) {
+    updateClient(input: { id: $id, fields: $fields }) {
+      client {
+        ...ClientShortFragment
+      }
+    }
+  }
+  ${ClientShortFragment}
+`;

@@ -1,17 +1,20 @@
 import React from 'react';
-import { CreatePurchaseRequestType, SetBonusesRequestType } from '../../queries/client';
+import { CreatePurchaseRequestType, EditClientRequestType, SetBonusesRequestType } from '../../queries/client';
 import { ClientT } from '../../types/client';
 import { Descriptions, Flex, Spin } from 'antd';
 import { PurchaseButton } from '../ClientActions/PurchaseButton';
 import { DeleteButton } from '../ClientActions/DeleteButton';
 import { PurchaseCard, PurchasesListWrapper } from './styles';
-import { CURRENCY_SYMBOL } from '../../constants/common';
+import { CURRENCY_SYMBOL, LOCAL_DATE_FORMAT } from '../../constants/common';
 import { SetBonusesButton } from '../ClientActions/SetBonusesButton';
+import { EditClientButton } from '../ClientActions/EditClientButton';
+import dayjs from 'dayjs';
 
 type ClientInfoPageProps = {
   onDelete: (id: string) => Promise<void>;
   onCreatePurchase: (fields: CreatePurchaseRequestType['fields']) => Promise<void>;
   onSetBonuses: (values: SetBonusesRequestType) => Promise<void>;
+  onEditClient: (id: string, fields: EditClientRequestType['fields']) => Promise<void>;
   loading: boolean;
   client?: ClientT;
   percentFromPriceAsBonuses: number;
@@ -21,6 +24,7 @@ export const ClientInfoPage: React.FC<ClientInfoPageProps> = ({
   loading,
   client,
   onCreatePurchase,
+  onEditClient,
   onDelete,
   onSetBonuses,
   percentFromPriceAsBonuses,
@@ -37,6 +41,13 @@ export const ClientInfoPage: React.FC<ClientInfoPageProps> = ({
                 objectId={client?.objectId}
                 totalBonuses={client?.bonuses + client?.giftedBonuses}
                 percentFromPriceAsBonuses={percentFromPriceAsBonuses}
+              />
+              <EditClientButton
+                fullName={client?.fullName}
+                birthday={dayjs(client?.birthday, LOCAL_DATE_FORMAT).toDate()}
+                phone={client?.phone}
+                objectId={client?.objectId}
+                onEditClient={onEditClient}
               />
               <DeleteButton name={client?.fullName?.toUpperCase()} objectId={client?.objectId} onDelete={onDelete} />
               <SetBonusesButton

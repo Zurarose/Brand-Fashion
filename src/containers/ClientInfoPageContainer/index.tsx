@@ -6,7 +6,7 @@ import { useSettingsStore } from '../../store/settings';
 
 export const ClientInfoPageContainer = () => {
   const { id } = useParams();
-  const { client, error, loading, onCreatePurchase, onDelete, onSetBonuses } = useClient(id);
+  const { client, error, loading, onCreatePurchase, onDelete, onSetBonuses, onEdit } = useClient(id);
   const { settings } = useSettingsStore();
 
   return (
@@ -18,6 +18,7 @@ export const ClientInfoPageContainer = () => {
         onCreatePurchase={onCreatePurchase}
         onDelete={onDelete}
         onSetBonuses={onSetBonuses}
+        onEditClient={onEdit}
         percentFromPriceAsBonuses={settings.MAX_BONUSES_PER_PURCHASE_PERCENT}
       />
     </>

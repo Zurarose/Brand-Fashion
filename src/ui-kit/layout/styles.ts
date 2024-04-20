@@ -18,6 +18,8 @@ export const SHeader = styled(Header)`
 
 export const SContent = styled(Content)`
   padding: 24px;
+  padding-bottom: 0;
+  overflow: hidden;
 `;
 
 export const SSider = styled(Sider)``;

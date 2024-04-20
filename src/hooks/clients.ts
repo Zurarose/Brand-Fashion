@@ -13,6 +13,9 @@ import {
   DeleteClientMutation,
   DeleteClientRequestType,
   DeleteClientResponseType,
+  EditClientMutation,
+  EditClientRequestType,
+  EditClientResponseType,
   SetBonusesMutation,
   SetBonusesRequestType,
 } from '../queries/client';
@@ -23,6 +26,10 @@ import { COUNTRY_CODE, LOCAL_DATE_FORMAT, SERVER_DATE_FORMAT } from '../constant
 import { message } from 'antd';
 import dayjs from 'dayjs';
 
+const removeUTCOffSet = (date: Date) => {
+  return dayjs(date).add(dayjs(date).utcOffset(), 'minute').toDate();
+};
+
 export const useClientActions = () => {
   const [messageApi, error] = message.useMessage();
 
@@ -31,6 +38,7 @@ export const useClientActions = () => {
   const [createClient] = useMutation<CreateClientResponseType, CreateClientRequestType>(CreateClientMutation);
   const [createPurchase] = useMutation<CreatePurchaseResponseType, CreatePurchaseRequestType>(CreatePurchaseMutation);
   const [deleteClient] = useMutation<DeleteClientResponseType, DeleteClientRequestType>(DeleteClientMutation);
+  const [editClient] = useMutation<EditClientResponseType, EditClientRequestType>(EditClientMutation);
   const [setBonus] = useMutation<boolean, SetBonusesRequestType>(SetBonusesMutation);
 
   const onSetBonus = async (values: SetBonusesRequestType, onSuccess?: () => Promise<void>) => {
@@ -57,12 +65,46 @@ export const useClientActions = () => {
     }
   };
 
+  const onEditClient = async (id: string, values: EditClientRequestType['fields'], onSuccess?: () => Promise<void>) => {
+    try {
+      setLoading(true);
+      const { data, errors } = await editClient({
+        variables: {
+          id: id,
+          fields: {
+            birthday: removeUTCOffSet(values?.birthday),
+            fullName: values?.fullName,
+            phone: `${COUNTRY_CODE}${values.phone}`,
+          },
+        },
+      });
+      if (data && !errors?.[0]) {
+        onSuccess?.();
+        return;
+      }
+      throw new Error(errors?.[0]?.message);
+    } catch (error) {
+      if (error instanceof Error)
+        messageApi.open({
+          type: 'error',
+          content: error.message ? error.message : '',
+        });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const onCreatePurchase = async (fields: CreatePurchaseRequestType['fields'], onSuccess?: () => Promise<void>) => {
     try {
       setLoading(true);
       const { data, errors } = await createPurchase({
         variables: {
-          fields: { ...fields, price: Number(fields.price), usedBonuses: Number(fields.usedBonuses) },
+          fields: {
+            ...fields,
+            date: removeUTCOffSet(fields?.date),
+            price: Number(fields.price),
+            usedBonuses: Number(fields.usedBonuses),
+          },
         },
       });
       if (data?.createPurchase?.purchase?.id) {
@@ -106,7 +148,7 @@ export const useClientActions = () => {
       setLoading(true);
       const { data, errors } = await createClient({
         variables: {
-          fields: { ...fields, phone: `${COUNTRY_CODE}${fields.phone}` },
+          fields: { ...fields, birthday: removeUTCOffSet(fields?.birthday), phone: `${COUNTRY_CODE}${fields.phone}` },
         },
       });
       if (data?.createClient?.client?.id) {
@@ -128,6 +170,7 @@ export const useClientActions = () => {
   return {
     error,
     onDelete,
+    onEditClient,
     onCreatePurchase,
     loading,
     onCreate,
@@ -223,7 +266,7 @@ export const useClient = (clientId?: string) => {
   const { viewer } = useViewerStore();
   const [loading, setLoading] = useState(true);
   const [client, setClient] = useState<ClientT | undefined>(undefined);
-  const { onCreatePurchase, onDelete, error, onSetBonus } = useClientActions();
+  const { onCreatePurchase, onDelete, error, onSetBonus, onEditClient } = useClientActions();
 
   const { refetch } = useQuery<ClientPurchasesResponseType>(ClientPurchasesQuery, {
     variables: { id: clientId },
@@ -241,6 +284,10 @@ export const useClient = (clientId?: string) => {
 
   const onDeleteClient = async (id: string) => {
     onDelete(id, onSuccess);
+  };
+
+  const onEditClients = async (id: string, values: EditClientRequestType['fields']) => {
+    onEditClient(id, values, onSuccess);
   };
 
   const onSetBonuses = async (values: SetBonusesRequestType) => {
@@ -261,5 +308,13 @@ export const useClient = (clientId?: string) => {
     return;
   };
 
-  return { loading, error, client, onDelete: onDeleteClient, onCreatePurchase: onCreateClientPurschuse, onSetBonuses };
+  return {
+    loading,
+    error,
+    client,
+    onDelete: onDeleteClient,
+    onCreatePurchase: onCreateClientPurschuse,
+    onSetBonuses,
+    onEdit: onEditClients,
+  };
 };
