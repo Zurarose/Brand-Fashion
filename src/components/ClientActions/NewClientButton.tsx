@@ -56,7 +56,7 @@ export const NewClientButton: React.FC<NewClientButtonProps> = ({ onCreate }) =>
     <>
       <Modal title="Create New Client" open={open} onOk={handleOk} onCancel={toggleModal}>
         <Flex gap={12} vertical>
-          <Typography.Paragraph>Firstname and Lastname </Typography.Paragraph>
+          <Typography.Paragraph>Firstname and Lastname</Typography.Paragraph>
           <Input
             name={'fullName'}
             value={fields.fullName}
@@ -65,7 +65,7 @@ export const NewClientButton: React.FC<NewClientButtonProps> = ({ onCreate }) =>
             variant="outlined"
             onChange={onChange('fullName')}
           />
-          <Typography.Paragraph>Firstname and Lastname </Typography.Paragraph>
+          <Typography.Paragraph>Phone</Typography.Paragraph>
           <Input
             addonBefore={COUNTRY_CODE}
             name={'phone'}
