@@ -72,7 +72,7 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({
     <>
       <Modal title="New Purchase" open={open} onOk={handleOk} onCancel={toggleModal}>
         <Flex gap={12} vertical>
-          <Typography.Paragraph>Item Name</Typography.Paragraph>
+          <Typography.Paragraph>Название товара</Typography.Paragraph>
           <Input
             name={'itemName'}
             value={fields.itemName}
@@ -81,7 +81,7 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({
             variant="outlined"
             onChange={onChange('itemName')}
           />
-          <Typography.Paragraph>Price</Typography.Paragraph>
+          <Typography.Paragraph>Цена</Typography.Paragraph>
           <Input
             addonAfter={<span>{CURRENCY_SYMBOL}</span>}
             name={'price'}
@@ -93,7 +93,7 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({
             onChange={onChange('price')}
           />
           <Typography.Paragraph>
-            Bonuses to use {errors.usedBonuses && `(Max percent is ${percentFromPriceAsBonuses}!)`}
+            Сколько бонусов использовать {errors.usedBonuses && `(Максимальный процент: ${percentFromPriceAsBonuses}!)`}
           </Typography.Paragraph>
           <Input
             addonAfter={<StarOutlined />}
@@ -105,7 +105,7 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({
             type="number"
             onChange={onChange('usedBonuses')}
           />
-          <Typography.Paragraph>Date</Typography.Paragraph>
+          <Typography.Paragraph>Дата</Typography.Paragraph>
           <DatePicker
             status={errors.date ? 'error' : ''}
             value={fields.date}
@@ -117,7 +117,7 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({
         </Flex>
       </Modal>
       <Button type="primary" onClick={toggleModal} icon={<PlusOutlined />}>
-        Add Purchase
+        Добавить покупку
       </Button>
     </>
   );

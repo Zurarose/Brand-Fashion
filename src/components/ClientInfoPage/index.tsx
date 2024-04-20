@@ -61,11 +61,11 @@ export const ClientInfoPage: React.FC<ClientInfoPageProps> = ({
           size="middle"
           title={client?.fullName?.toUpperCase()}>
           <Descriptions.Item label="ID">{client?.id}</Descriptions.Item>
-          <Descriptions.Item label="Bonuses">{client?.bonuses}</Descriptions.Item>
-          <Descriptions.Item label="Gifted Bonuses">{client?.giftedBonuses}</Descriptions.Item>
-          <Descriptions.Item label="Bithday">{client?.birthday}</Descriptions.Item>
-          <Descriptions.Item label="Phone">{client?.phone}</Descriptions.Item>
-          <Descriptions.Item label="Total Purchases">{client?.Purchases?.edges?.length}</Descriptions.Item>
+          <Descriptions.Item label="Бонусы">{client?.bonuses}</Descriptions.Item>
+          <Descriptions.Item label="Подаренные бонусы">{client?.giftedBonuses}</Descriptions.Item>
+          <Descriptions.Item label="День рождение">{client?.birthday}</Descriptions.Item>
+          <Descriptions.Item label="Телефон">{client?.phone}</Descriptions.Item>
+          <Descriptions.Item label="Всего покупок">{client?.Purchases?.edges?.length}</Descriptions.Item>
         </Descriptions>
         <PurchasesList purshuses={client?.Purchases} />
       </Flex>
@@ -80,14 +80,14 @@ const PurchasesList: React.FC<{ purshuses: ClientT['Purchases'] }> = ({ purshuse
         <PurchaseCard key={item?.node?.objectId}>
           <Descriptions column={6} size="small" title={item?.node?.itemName}>
             <Descriptions.Item label="ID">{item?.node?.objectId?.toUpperCase()}</Descriptions.Item>
-            <Descriptions.Item label="Price">
+            <Descriptions.Item label="Цена">
               {item?.node?.price} {CURRENCY_SYMBOL}
             </Descriptions.Item>
-            <Descriptions.Item label="Date">
+            <Descriptions.Item label="Дата">
               {new Date(item?.node?.date)?.toLocaleDateString('ru-RU')}
             </Descriptions.Item>
-            <Descriptions.Item label="Bonuses received">{item?.node?.bonuseReceived}</Descriptions.Item>
-            <Descriptions.Item label="Bonuses used">{item?.node?.usedBonuses}</Descriptions.Item>
+            <Descriptions.Item label="Получено бонусов">{item?.node?.bonuseReceived}</Descriptions.Item>
+            <Descriptions.Item label="Использовано бонусов">{item?.node?.usedBonuses}</Descriptions.Item>
           </Descriptions>
         </PurchaseCard>
       ))}

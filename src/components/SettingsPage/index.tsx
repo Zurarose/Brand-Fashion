@@ -49,7 +49,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ config, loading, onS
     <>
       <Spin spinning={loading} fullscreen />
       <SettingsWrapper>
-        <Typography>Getting bonuses from purchase</Typography>
+        <Typography>Получает % от покупки в виде бонусов:</Typography>
         <Input
           addonAfter={<span>%</span>}
           status={errors.GETTING_PERCENT_BONUSES ? 'error' : ''}
@@ -60,7 +60,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ config, loading, onS
           type="number"
           onChange={handleChange('GETTING_PERCENT_BONUSES')}
         />
-        <Typography>Gift bonuses on user bithday</Typography>
+        <Typography>Дарим на день рождение</Typography>
         <Input
           addonAfter={<GiftOutlined />}
           status={errors.GIFT_BONUSES_USER_BIRTHDAY ? 'error' : ''}
@@ -71,7 +71,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ config, loading, onS
           type="number"
           onChange={handleChange('GIFT_BONUSES_USER_BIRTHDAY')}
         />
-        <Typography>How much percent from price can be used as bonuses for purchase</Typography>
+        <Typography>Какой макс. процент от суммы можно использовать в виде бонусов</Typography>
         <Input
           addonAfter={<GiftOutlined />}
           status={errors.MAX_BONUSES_PER_PURCHASE_PERCENT ? 'error' : ''}
@@ -82,7 +82,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({ config, loading, onS
           type="number"
           onChange={handleChange('MAX_BONUSES_PER_PURCHASE_PERCENT')}
         />
-        <Typography>How much days gifted bonuses will be active</Typography>
+        <Typography>Сколько дней можно использовать подаренные бонусы</Typography>
         <Input
           addonAfter={<CalendarOutlined />}
           status={errors.LIMITED_BONUSES_TIMEOUT_DAYS ? 'error' : ''}

@@ -45,9 +45,9 @@ export const SetBonusesButton: React.FC<PurchaseButtonProps> = ({ onSetBonuses, 
 
   return (
     <>
-      <Modal title="Change user bonuses" open={open} onOk={handleOk} onCancel={toggleModal}>
+      <Modal title="Изменить количество бонусов" open={open} onOk={handleOk} onCancel={toggleModal}>
         <Flex gap={12} vertical>
-          <Typography.Paragraph>Bonuses</Typography.Paragraph>
+          <Typography.Paragraph>Бонусы</Typography.Paragraph>
           <Input
             addonAfter={<StarOutlined />}
             name={'amount'}
@@ -58,7 +58,7 @@ export const SetBonusesButton: React.FC<PurchaseButtonProps> = ({ onSetBonuses, 
             type="number"
             onChange={onChange('amount')}
           />
-          <Typography.Paragraph>Gifted bonuses</Typography.Paragraph>
+          <Typography.Paragraph>Подаренные бонусы</Typography.Paragraph>
           <Input
             addonAfter={<StarOutlined />}
             name={'amountgifted'}
@@ -72,7 +72,7 @@ export const SetBonusesButton: React.FC<PurchaseButtonProps> = ({ onSetBonuses, 
         </Flex>
       </Modal>
       <Button type="primary" onClick={toggleModal} icon={<StarOutlined />}>
-        Set bonuses
+        Редактировать бонусы
       </Button>
     </>
   );

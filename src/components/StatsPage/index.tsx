@@ -70,7 +70,7 @@ export const StatsPage: React.FC<StatsPageProps> = ({ stats, onSearch, loading }
     <>
       <Flex vertical gap={12}>
         <Spin spinning={loading} fullscreen />
-        <Typography>Select date range below</Typography>
+        <Typography>Выберите период</Typography>
         <Flex gap={12}>
           <StyledPicker
             allowClear={false}
@@ -89,15 +89,15 @@ export const StatsPage: React.FC<StatsPageProps> = ({ stats, onSearch, loading }
             variant="outlined"
           />
           <Button onClick={handleSearch} type="primary">
-            Show
+            Показать
           </Button>
         </Flex>
         <Line {...graphSetting} />
         <Descriptions>
-          <Descriptions.Item label="Total sales price">
+          <Descriptions.Item label="Всего покупок на сумму:">
             {totalSales} {CURRENCY_SYMBOL}
           </Descriptions.Item>
-          <Descriptions.Item label="Total bonuses used">{totalUsedBonuses} bonuses</Descriptions.Item>
+          <Descriptions.Item label="Всего использовано бонусов:">{totalUsedBonuses}</Descriptions.Item>
         </Descriptions>
       </Flex>
     </>

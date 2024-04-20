@@ -92,7 +92,7 @@ const ClientsList: React.FC<ClientsListProps> = ({
                       percentFromPriceAsBonuses={percentFromPriceAsBonuses}
                     />
                     <Button type="primary" onClick={handleRedirect(client?.objectId)} icon={<BarsOutlined />}>
-                      Info
+                      Информация
                     </Button>
                     <DeleteButton
                       name={client?.fullName?.toUpperCase()}

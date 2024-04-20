@@ -57,9 +57,9 @@ export const EditClientButton: React.FC<EditClientButtonProps> = ({
 
   return (
     <>
-      <Modal title="Create New Client" open={open} onOk={handleOk} onCancel={toggleModal}>
+      <Modal title="Редактировать клиента" open={open} onOk={handleOk} onCancel={toggleModal}>
         <Flex gap={12} vertical>
-          <Typography.Paragraph>Firstname and Lastname </Typography.Paragraph>
+          <Typography.Paragraph>Имя и фамилия</Typography.Paragraph>
           <Input
             name={'fullName'}
             value={fields.fullName}
@@ -68,7 +68,7 @@ export const EditClientButton: React.FC<EditClientButtonProps> = ({
             variant="outlined"
             onChange={onChange('fullName')}
           />
-          <Typography.Paragraph>Firstname and Lastname </Typography.Paragraph>
+          <Typography.Paragraph>Номер телефона</Typography.Paragraph>
           <Input
             addonBefore={COUNTRY_CODE}
             name={'phone'}
@@ -79,7 +79,7 @@ export const EditClientButton: React.FC<EditClientButtonProps> = ({
             type="number"
             onChange={onChange('phone')}
           />
-          <Typography.Paragraph>Bithday</Typography.Paragraph>
+          <Typography.Paragraph>День рождение</Typography.Paragraph>
           <DatePicker
             status={errors.birthday ? 'error' : ''}
             value={fields.birthday}
@@ -90,7 +90,7 @@ export const EditClientButton: React.FC<EditClientButtonProps> = ({
         </Flex>
       </Modal>
       <Button size="middle" type="primary" onClick={toggleModal} icon={<EditFilled />}>
-        Edit
+        Редактировать
       </Button>
     </>
   );

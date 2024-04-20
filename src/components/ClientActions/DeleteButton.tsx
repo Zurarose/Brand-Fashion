@@ -18,11 +18,11 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({ onDelete, name, obje
 
   return (
     <>
-      <Modal title="Confirm Delete Client" open={open} onOk={handleOk(objectId)} onCancel={toggleModal}>
-        Delete client {name}?
+      <Modal title="Подтвердите удаление" open={open} onOk={handleOk(objectId)} onCancel={toggleModal}>
+        Удалить клиента: {name}?
       </Modal>
       <Button onClick={toggleModal} type="primary" icon={<DeleteOutlined />}>
-        Delete
+        Удалить
       </Button>
     </>
   );
