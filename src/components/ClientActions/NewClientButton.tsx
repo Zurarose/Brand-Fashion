@@ -54,9 +54,9 @@ export const NewClientButton: React.FC<NewClientButtonProps> = ({ onCreate }) =>
 
   return (
     <>
-      <Modal title="Create New Client" open={open} onOk={handleOk} onCancel={toggleModal}>
+      <Modal title="Добавить нового клиента" open={open} onOk={handleOk} onCancel={toggleModal}>
         <Flex gap={12} vertical>
-          <Typography.Paragraph>Имя и фамилия</Typography.Paragraph>
+          <Typography.Paragraph>Имя и Фамилия</Typography.Paragraph>
           <Input
             name={'fullName'}
             value={fields.fullName}
@@ -82,6 +82,7 @@ export const NewClientButton: React.FC<NewClientButtonProps> = ({ onCreate }) =>
             value={fields.birthday}
             onChange={onChangeDate}
             changeOnBlur
+            open={false}
             format={LOCAL_DATE_FORMAT}
           />
         </Flex>

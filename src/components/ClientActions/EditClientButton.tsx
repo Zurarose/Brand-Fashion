@@ -59,7 +59,7 @@ export const EditClientButton: React.FC<EditClientButtonProps> = ({
     <>
       <Modal title="Редактировать клиента" open={open} onOk={handleOk} onCancel={toggleModal}>
         <Flex gap={12} vertical>
-          <Typography.Paragraph>Имя и фамилия</Typography.Paragraph>
+          <Typography.Paragraph>Имя и Фамилия</Typography.Paragraph>
           <Input
             name={'fullName'}
             value={fields.fullName}
@@ -85,6 +85,7 @@ export const EditClientButton: React.FC<EditClientButtonProps> = ({
             value={fields.birthday}
             onChange={onChangeDate}
             changeOnBlur
+            open={false}
             format={LOCAL_DATE_FORMAT}
           />
         </Flex>

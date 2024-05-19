@@ -39,6 +39,31 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({
     if (name === 'usedBonuses' && Number(input?.target?.value) > totalBonuses) {
       input.target.value = String(totalBonuses);
     }
+
+    if (name === 'price') {
+      setFields((prev) => {
+        const maxForUse = Number(Number((Number(input?.target?.value) / 100) * percentFromPriceAsBonuses)?.toFixed(2));
+        return {
+          ...prev,
+          [name]: Number(input?.target?.value),
+          usedBonuses: Number(Number(maxForUse > totalBonuses ? totalBonuses : maxForUse)?.toFixed(2)),
+        };
+      });
+      setErrors((prev) => ({ ...prev, [name]: false }));
+      return;
+    }
+    if (name === 'usedBonuses') {
+      setFields((prev) => {
+        const maxForUse = Number(Number((Number(prev.price) / 100) * percentFromPriceAsBonuses)?.toFixed(2));
+        return {
+          ...prev,
+          [name]:
+            Number(input?.target?.value) > maxForUse ? maxForUse : Number(Number(input?.target?.value)?.toFixed(2)),
+        };
+      });
+      setErrors((prev) => ({ ...prev, [name]: false }));
+      return;
+    }
     setFields((prev) => ({ ...prev, [name]: input?.target?.value }));
     setErrors((prev) => ({ ...prev, [name]: false }));
   };
@@ -70,7 +95,7 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({
 
   return (
     <>
-      <Modal title="New Purchase" open={open} onOk={handleOk} onCancel={toggleModal}>
+      <Modal title="Новая покупка" open={open} onOk={handleOk} onCancel={toggleModal}>
         <Flex gap={12} vertical>
           <Typography.Paragraph>Название товара</Typography.Paragraph>
           <Input
