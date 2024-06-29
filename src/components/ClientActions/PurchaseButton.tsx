@@ -42,11 +42,10 @@ export const PurchaseButton: React.FC<PurchaseButtonProps> = ({
 
     if (name === 'price') {
       setFields((prev) => {
-        const maxForUse = Number(Number((Number(input?.target?.value) / 100) * percentFromPriceAsBonuses)?.toFixed(2));
         return {
           ...prev,
           [name]: Number(input?.target?.value),
-          usedBonuses: Number(Number(maxForUse > totalBonuses ? totalBonuses : maxForUse)?.toFixed(2)),
+          usedBonuses: 0,
         };
       });
       setErrors((prev) => ({ ...prev, [name]: false }));
