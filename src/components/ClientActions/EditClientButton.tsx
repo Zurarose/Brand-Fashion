@@ -85,7 +85,6 @@ export const EditClientButton: React.FC<EditClientButtonProps> = ({
             value={fields.birthday}
             onChange={onChangeDate}
             changeOnBlur
-            open={false}
             format={LOCAL_DATE_FORMAT}
           />
         </Flex>

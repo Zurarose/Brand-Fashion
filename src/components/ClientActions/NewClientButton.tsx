@@ -82,7 +82,6 @@ export const NewClientButton: React.FC<NewClientButtonProps> = ({ onCreate }) =>
             value={fields.birthday}
             onChange={onChangeDate}
             changeOnBlur
-            open={false}
             format={LOCAL_DATE_FORMAT}
           />
         </Flex>
